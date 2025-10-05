@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { v4 as uuidv4 } from "uuid";
-import "./ArtistInfo.css";
+import "./ReelInfo.css";
 import { collection, setDoc, updateDoc, doc } from "firebase/firestore";
 import { db } from "../firebase/config";
 import {
@@ -8,7 +8,7 @@ import {
   uploadMultipleImages,
   getAllMidnightSoldiers,
 } from "../firebase/services";
-const ArtistInfo = () => {
+const ReelInfo = () => {
   const [formData, setFormData] = useState({
     artistName: "",
     artistBio: "",
@@ -761,4 +761,4 @@ const ArtistInfo = () => {
   );
 };
 
-export default ArtistInfo;
+export default ReelInfo;

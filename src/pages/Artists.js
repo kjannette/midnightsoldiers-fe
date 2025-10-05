@@ -38,12 +38,12 @@ const Artists = () => {
     };
   }, []);
 
-  // Handle clicking on artist ID to navigate to ArtistInfo page with populated data
+  // Handle clicking on artist ID to navigate to ReelInfo page with populated data
   const handleArtistIdClick = (artist) => {
-    // Store the artist data in sessionStorage so ArtistInfo can access it
+    // Store the artist data in sessionStorage so ReelInfo can access it
     sessionStorage.setItem("selectedArtist", JSON.stringify(artist));
-    // Navigate to the artist info page
-    navigate("/artist-info");
+    // Navigate to the reel info page
+    navigate("/artistinfo");
   };
 
   if (loading) {

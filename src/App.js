@@ -9,7 +9,7 @@ import Contact from "./pages/Contact";
 import Shop from "./pages/Shop";
 import Subscribe from "./pages/Subscribe";
 import AdminLogin from "./pages/AdminLogin";
-import ArtistInfo from "./pages/ArtistInfo";
+import ReelInfo from "./pages/ReelInfo";
 import AdminDashboard from "./pages/AdminDashboard";
 import "./App.css";
 
@@ -27,7 +27,7 @@ function App() {
           <Route path="/shop" element={<Shop />} />
           <Route path="/subscribe" element={<Subscribe />} />
           <Route path="/adminlogin" element={<AdminLogin />} />
-          <Route path="/artistinfo" element={<ArtistInfo />} />
+          <Route path="/artistinfo" element={<ReelInfo />} />
           <Route path="/admin" element={<AdminDashboard />} />
         </Routes>
       </div>
