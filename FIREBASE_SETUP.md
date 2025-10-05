@@ -116,22 +116,6 @@ service firebase.storage {
 
 ## Collections Structure
 
-### Artists Collection (`artists`)
-
-```javascript
-{
-  artistName: string,
-  artistBio: string,
-  artistPhotoUrl: string | null,
-  exhibitionName: string,
-  exhibitionStartDate: string,
-  exhibitionEndDate: string,
-  exemplaryWorksUrls: string[],
-  createdAt: timestamp,
-  updatedAt: timestamp
-}
-```
-
 ### Subscriptions Collection (`subscriptions`)
 
 ```javascript
@@ -180,7 +164,7 @@ service firebase.storage {
 ### Admin Routes
 
 - `/admin` - Dashboard overview
-- `/artistinfo` - Add new artist form
+- `/reelinfo` - Add new reel form
 
 ## Deployment Notes
 

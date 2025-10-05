@@ -416,13 +416,13 @@ const ReelInfo = () => {
       <div className="artist-info-background"></div>
       <div className="artist-info-content">
         <div className="form-header">
-          <h1>Artist Information Form</h1>
+          <h1>Reel Information Form</h1>
         </div>
 
         <form className="artist-form">
           {/* Artist Name */}
           <div className="form-group">
-            <label htmlFor="artistName">Artist Name *</label>
+            <label htmlFor="artistName">Reel Name *</label>
             <input
               type="text"
               id="artistName"
@@ -440,7 +440,7 @@ const ReelInfo = () => {
           {/* Artist Bio */}
           <div className="form-group">
             <label htmlFor="artistBio">
-              Artist Bio * ({formData.artistBio.length}/2500 characters)
+              Reel Bio * ({formData.artistBio.length}/2500 characters)
             </label>
             <textarea
               id="artistBio"
@@ -701,7 +701,7 @@ const ReelInfo = () => {
           {/* Success Message */}
           {submitSuccess && (
             <div className="success-message">
-              ✅ Artist information submitted successfully to Firebase!
+              ✅ Reel information submitted successfully to Firebase!
             </div>
           )}
 
@@ -712,21 +712,21 @@ const ReelInfo = () => {
             disabled={isSubmitting}
             onClick={handleFuckYouSubmit}
           >
-            {isSubmitting ? "Submitting..." : "Submit Artist Information"}
+            {isSubmitting ? "Submitting..." : "Submit Reel Information"}
           </button>
         </form>
 
         {/* Current Artists Section */}
         <div className="current-artists-section">
-          <h2>Current Artists</h2>
+          <h2>Current Reels</h2>
           {loadingArtists ? (
-            <p>Loading artists...</p>
+            <p>Loading reels...</p>
           ) : currentArtists.length === 0 ? (
-            <p>No artists found.</p>
+            <p>No reels found.</p>
           ) : (
             <div className="artists-list">
               <p style={{ color: "white", marginBottom: "10px" }}>
-                Found {currentArtists.length} artists:
+                Found {currentArtists.length} reels:
               </p>
               {currentArtists.map((artist) => (
                 <div key={artist.id} className="artist-item">

@@ -27,7 +27,7 @@ function App() {
           <Route path="/shop" element={<Shop />} />
           <Route path="/subscribe" element={<Subscribe />} />
           <Route path="/adminlogin" element={<AdminLogin />} />
-          <Route path="/artistinfo" element={<ReelInfo />} />
+          <Route path="/reelinfo" element={<ReelInfo />} />
           <Route path="/admin" element={<AdminDashboard />} />
         </Routes>
       </div>

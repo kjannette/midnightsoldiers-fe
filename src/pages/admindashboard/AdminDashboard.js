@@ -101,10 +101,10 @@ const AdminDashboard = () => {
           <h1>Admin Dashboard</h1>
           <div className="header-actions">
             <button
-              onClick={() => navigate("/artistinfo")}
+              onClick={() => navigate("/reelinfo")}
               className="action-button primary"
             >
-              Add New Artist
+              Add New Reel
             </button>
             <button onClick={logout} className="action-button secondary">
               Logout
@@ -281,4 +281,3 @@ const AdminDashboard = () => {
 };
 
 export default AdminDashboard;
-
