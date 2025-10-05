@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import {
   saveSubscription,
   saveNewsletterSubscription,
-} from "../firebase/services";
+} from "../../firebase/services";
 import "./Subscribe.css";
 
 const Subscribe = () => {

@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { saveContactForm } from "../firebase/services";
+import { saveContactForm } from "../../firebase/services";
 import "./Contact.css";
 
 const Contact = () => {

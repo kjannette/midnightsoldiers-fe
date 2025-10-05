@@ -6,7 +6,7 @@ import {
   getAllContactForms,
   onAuthStateChange,
   signOutAdmin,
-} from "../firebase/services";
+} from "../../firebase/services";
 import "./AdminDashboard.css";
 
 const AdminDashboard = () => {

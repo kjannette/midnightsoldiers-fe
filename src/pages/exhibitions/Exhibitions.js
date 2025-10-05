@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { getAllArtists } from "../firebase/services";
+import { getAllArtists } from "../../firebase/services";
 import "./Exhibitions.css";
 
 const Exhibitions = () => {

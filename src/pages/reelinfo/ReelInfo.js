@@ -2,12 +2,13 @@ import React, { useState, useEffect } from "react";
 import { v4 as uuidv4 } from "uuid";
 import "./ReelInfo.css";
 import { collection, setDoc, updateDoc, doc } from "firebase/firestore";
-import { db } from "../firebase/config";
+import { db } from "../../firebase/config";
 import {
   uploadImageToStorage,
   uploadMultipleImages,
   getAllMidnightSoldiers,
-} from "../firebase/services";
+} from "../../firebase/services";
+
 const ReelInfo = () => {
   const [formData, setFormData] = useState({
     artistName: "",
@@ -52,19 +53,6 @@ const ReelInfo = () => {
         setLoadingArtists(false);
       }
     };
-
-    // Check if there's a selected artist from sessionStorage
-    const selectedArtistData = sessionStorage.getItem("selectedArtist");
-    if (selectedArtistData) {
-      try {
-        const artist = JSON.parse(selectedArtistData);
-        handleArtistIdClick(artist);
-        // Clear the sessionStorage after using it
-        sessionStorage.removeItem("selectedArtist");
-      } catch (error) {
-        console.error("Error parsing selected artist data:", error);
-      }
-    }
 
     fetchArtists();
   }, []);

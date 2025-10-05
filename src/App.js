@@ -1,16 +1,16 @@
 import React from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Navigation from "./components/Navigation";
-import Home from "./pages/Home";
-import Artists from "./pages/Artists";
-import News from "./pages/News";
-import RumorsLies from "./pages/RumorsLies";
-import Contact from "./pages/Contact";
-import Shop from "./pages/Shop";
-import Subscribe from "./pages/Subscribe";
-import AdminLogin from "./pages/AdminLogin";
-import ReelInfo from "./pages/ReelInfo";
-import AdminDashboard from "./pages/AdminDashboard";
+import Home from "./pages/home/Home";
+import News from "./pages/news/News";
+import RumorsLies from "./pages/rumorslies/RumorsLies";
+import Contact from "./pages/contact/Contact";
+import Shop from "./pages/shop/Shop";
+import Subscribe from "./pages/subscribe/Subscribe";
+import AdminLogin from "./pages/adminlogin/AdminLogin";
+import ReelInfo from "./pages/reelinfo/ReelInfo";
+import AdminDashboard from "./pages/admindashboard/AdminDashboard";
+import Exhibitions from "./pages/exhibitions/Exhibitions";
 import "./App.css";
 
 function App() {
@@ -20,7 +20,7 @@ function App() {
         <Navigation />
         <Routes>
           <Route path="/" element={<Home />} />
-          <Route path="/artists" element={<Artists />} />
+          <Route path="/exhibitions" element={<Exhibitions />} />
           <Route path="/news" element={<News />} />
           <Route path="/rumors-lies" element={<RumorsLies />} />
           <Route path="/contact" element={<Contact />} />
