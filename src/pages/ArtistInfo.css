@@ -1,0 +1,443 @@
+.artist-info {
+  position: relative;
+  width: 100vw;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+.artist-info-background {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: #000000;
+  background-image: radial-gradient(
+      circle at 25% 25%,
+      #333333 1px,
+      transparent 1px
+    ),
+    radial-gradient(circle at 75% 75%, #333333 1px, transparent 1px);
+  background-size: 50px 50px;
+  opacity: 0.3;
+  z-index: -1;
+}
+
+.artist-info-content {
+  position: relative;
+  z-index: 1;
+  padding: 20px;
+  background-color: rgba(0, 0, 0, 0.9);
+  min-height: 100vh;
+}
+
+.form-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 30px;
+  padding: 0 20px;
+}
+
+.form-header h1 {
+  color: #ffffff;
+  font-family: "Maison Neue", Helvetica, Arial, sans-serif;
+  font-size: 2.5rem;
+  margin: 0;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
+}
+
+.logout-button {
+  background-color: transparent;
+  color: #ffffff;
+  border: 1px solid #ffffff;
+  border-radius: 4px;
+  padding: 8px 16px;
+  font-family: "Maison Neue", Helvetica, Arial, sans-serif;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.logout-button:hover {
+  background-color: #ffffff;
+  color: #000000;
+}
+
+.artist-form {
+  max-width: 800px;
+  margin: 0 auto;
+  background-color: #1a1a1a;
+  border: 1px solid #333333;
+  border-radius: 8px;
+  padding: 40px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+}
+
+.form-group {
+  margin-bottom: 25px;
+}
+
+.form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+}
+
+.form-group label {
+  display: block;
+  color: #ffffff;
+  font-family: "Maison Neue", Helvetica, Arial, sans-serif;
+  font-size: 1rem;
+  margin-bottom: 8px;
+  font-weight: 500;
+}
+
+.form-group input,
+.form-group textarea {
+  width: 100%;
+  background-color: white;
+  border: 1px solid #444444;
+  border-radius: 4px;
+  padding: 12px;
+  color: #000000;
+  font-family: "Maison Neue", Helvetica, Arial, sans-serif;
+  font-size: 1rem;
+  transition: border-color 0.3s ease;
+  box-sizing: border-box;
+}
+
+.form-group input:focus,
+.form-group textarea:focus {
+  outline: none;
+  background-color: white;
+  border-color: #ffffff;
+  box-shadow: 0 0 5px rgba(255, 255, 255, 0.3);
+}
+
+.form-group input.error,
+.form-group textarea.error {
+  background-color: white;
+  border-color: #ff6666;
+}
+
+.form-group input:disabled,
+.form-group textarea:disabled {
+  background-color: white;
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+.form-group textarea {
+  resize: vertical;
+  min-height: 120px;
+}
+
+.error-text {
+  color: #ff6666;
+  font-size: 0.8rem;
+  margin-top: 5px;
+  display: block;
+}
+
+/* File Drop Zone Styles */
+.file-drop-zone {
+  border: 2px dashed #666666;
+  border-radius: 8px;
+  padding: 30px;
+  text-align: center;
+  transition: all 0.3s ease;
+  background-color: #2a2a2a;
+  cursor: pointer;
+}
+
+.file-drop-zone:hover:not(.disabled) {
+  border-color: #ffffff;
+  background-color: #333333;
+}
+
+.file-drop-zone.drag-over {
+  border-color: #ffffff;
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+.file-drop-zone.disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+.file-input-label {
+  display: block;
+  cursor: pointer;
+  width: 100%;
+}
+
+.file-drop-zone.disabled .file-input-label {
+  cursor: not-allowed;
+}
+
+.drop-message {
+  color: #cccccc;
+  font-family: "Maison Neue", Helvetica, Arial, sans-serif;
+}
+
+.drop-message p {
+  margin: 0;
+  font-size: 1rem;
+}
+
+.file-preview {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #333333;
+  border-radius: 4px;
+  padding: 10px 15px;
+  margin: 5px 0;
+  color: #ffffff;
+}
+
+.files-preview {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.add-more {
+  color: #cccccc;
+  font-style: italic;
+  padding: 10px;
+  border: 1px dashed #666666;
+  border-radius: 4px;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.add-more:hover {
+  border-color: #ffffff;
+  color: #ffffff;
+}
+
+.remove-file {
+  background: none;
+  border: none;
+  color: #ff6666;
+  font-size: 1.2rem;
+  cursor: pointer;
+  padding: 0;
+  width: 20px;
+  height: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  transition: all 0.3s ease;
+}
+
+.remove-file:hover {
+  background-color: #ff6666;
+  color: #ffffff;
+}
+
+/* Progress Styles */
+.progress-container {
+  margin: 20px 0;
+  padding: 15px;
+  background-color: #2a2a2a;
+  border-radius: 8px;
+  border: 1px solid #444444;
+}
+
+.progress-container.error {
+  border-color: #ff6666;
+  background-color: rgba(255, 102, 102, 0.1);
+}
+
+.progress-text {
+  color: #ffffff;
+  font-family: "Maison Neue", Helvetica, Arial, sans-serif;
+  font-size: 0.9rem;
+  margin-bottom: 10px;
+  text-align: center;
+}
+
+.progress-container.error .progress-text {
+  color: #ff6666;
+}
+
+.progress-bar {
+  width: 100%;
+  height: 8px;
+  background-color: #444444;
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.progress-fill {
+  height: 100%;
+  background-color: #ffffff;
+  transition: width 0.3s ease;
+  border-radius: 4px;
+}
+
+.success-message {
+  background-color: rgba(0, 255, 0, 0.1);
+  border: 1px solid #00ff00;
+  border-radius: 4px;
+  color: #00ff00;
+  padding: 15px;
+  font-size: 1rem;
+  text-align: center;
+  margin: 20px 0;
+  font-family: "Maison Neue", Helvetica, Arial, sans-serif;
+}
+
+.submit-button {
+  width: 100%;
+  background-color: #ffffff;
+  color: #000000;
+  border: none;
+  border-radius: 4px;
+  padding: 15px 24px;
+  font-family: "Maison Neue", Helvetica, Arial, sans-serif;
+  font-size: 1.1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  margin-top: 20px;
+}
+
+.submit-button:hover:not(:disabled) {
+  background-color: #cccccc;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(255, 255, 255, 0.3);
+}
+
+.submit-button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* Mobile Responsive Design */
+@media (max-width: 768px) {
+  .form-header {
+    flex-direction: column;
+    gap: 15px;
+    text-align: center;
+  }
+
+  .form-header h1 {
+    font-size: 2rem;
+  }
+
+  .artist-form {
+    padding: 25px 20px;
+    margin: 0 10px;
+  }
+
+  .form-row {
+    grid-template-columns: 1fr;
+    gap: 15px;
+  }
+
+  .file-drop-zone {
+    padding: 20px 15px;
+  }
+}
+
+@media (max-width: 480px) {
+  .artist-info-content {
+    padding: 15px 10px;
+  }
+
+  .form-header h1 {
+    font-size: 1.5rem;
+  }
+
+  .artist-form {
+    padding: 20px 15px;
+    margin: 0 5px;
+  }
+
+  .form-group input,
+  .form-group textarea {
+    padding: 10px;
+    font-size: 0.9rem;
+  }
+
+  .file-drop-zone {
+    padding: 15px 10px;
+  }
+
+  .drop-message p {
+    font-size: 0.9rem;
+  }
+}
+
+/* Current Artists Section */
+.current-artists-section {
+  text-align: center;
+  margin-top: 20px;
+  padding: 20px;
+  background: rgba(255, 0, 0, 0.2);
+  border: 2px solid red;
+  min-height: 100px;
+}
+
+.current-artists-section h2 {
+  color: white;
+  font-family: "Inter Tight", sans-serif;
+  font-weight: 600;
+  font-size: 2rem;
+  margin: 0 0 20px 0;
+}
+
+.artists-list {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  background: rgba(0, 255, 0, 0.2);
+  border: 1px solid green;
+  padding: 10px;
+}
+
+.artist-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: white;
+  font-family: "Inter Tight", sans-serif;
+  font-size: 1.1rem;
+}
+
+.artist-name {
+  color: white;
+}
+
+.artist-name-lower {
+  color: white;
+}
+
+.artist-separator {
+  color: white;
+  font-weight: bold;
+}
+
+.artist-id-button {
+  background: none;
+  border: none;
+  color: #4caf50;
+  text-decoration: underline;
+  cursor: pointer;
+  font-family: "Inter Tight", sans-serif;
+  font-size: inherit;
+  padding: 0;
+  transition: color 0.3s ease;
+}
+
+.artist-id-button:hover {
+  color: #45a049;
+}

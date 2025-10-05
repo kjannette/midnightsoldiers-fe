@@ -1,0 +1,215 @@
+.navigation {
+  position: fixed;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 90%;
+  height: 68px;
+  background-color: #000000;
+  border: 1px solid #ffffff;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 20px;
+  box-sizing: border-box;
+  z-index: 10;
+}
+
+.nav-links {
+  display: flex;
+  gap: 30px;
+}
+
+.nav-subscribe {
+  display: flex;
+}
+
+.nav-link {
+  color: #ffffff;
+  text-decoration: none;
+  font-family: "Maison Neue", Helvetica, Arial, sans-serif;
+  font-weight: 400;
+  font-size: 16px;
+  transition: opacity 0.3s ease;
+}
+
+.nav-link:hover {
+  opacity: 0.7;
+}
+
+.nav-link:visited {
+  color: #ffffff;
+}
+
+.nav-link.disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.nav-link.disabled:hover {
+  opacity: 0.5;
+}
+
+/* Hide Contact link */
+.nav-link.disabled:nth-child(4) {
+  display: none;
+}
+
+/* Mobile Navigation Container */
+.mobile-nav-container {
+  display: none;
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  z-index: 1000;
+}
+
+/* Hamburger Button */
+.hamburger-button {
+  background: #000000;
+  border: 1px solid #ffffff;
+  padding: 12px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 50px;
+  height: 50px;
+  transition: all 0.3s ease;
+  color: #ffffff;
+  font-size: 20px;
+  font-weight: bold;
+}
+
+.hamburger-button:hover {
+  opacity: 0.7;
+}
+
+/* Mobile Menu Overlay */
+.mobile-menu-overlay {
+  position: fixed;
+  top: 0;
+  right: -100%;
+  width: 100%;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.8);
+  z-index: 999;
+  transition: right 0.3s ease;
+}
+
+.mobile-menu-overlay.open {
+  right: 0;
+}
+
+.mobile-menu {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 300px;
+  height: 100vh;
+  background-color: #000000;
+  border-left: 1px solid #ffffff;
+  padding: 20px;
+  box-sizing: border-box;
+  transform: translateX(100%);
+  transition: transform 0.3s ease;
+}
+
+.mobile-menu-overlay.open .mobile-menu {
+  transform: translateX(0);
+}
+
+/* Close Button */
+.close-button {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  background: none;
+  border: none;
+  color: #ffffff;
+  font-size: 30px;
+  cursor: pointer;
+  padding: 0;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: opacity 0.3s ease;
+}
+
+.close-button:hover {
+  opacity: 0.7;
+}
+
+/* Mobile Navigation Links */
+.mobile-nav-links {
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+  margin-top: 80px;
+}
+
+.mobile-nav-link {
+  color: #ffffff;
+  text-decoration: none;
+  font-family: "Maison Neue", Helvetica, Arial, sans-serif;
+  font-weight: 400;
+  font-size: 18px;
+  padding: 10px 0;
+  border-bottom: 1px solid #333;
+  transition: all 0.3s ease;
+}
+
+.mobile-nav-link:hover {
+  opacity: 0.7;
+  padding-left: 10px;
+}
+
+.mobile-nav-link:visited {
+  color: #ffffff;
+}
+
+.mobile-nav-link.disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.mobile-nav-link.disabled:hover {
+  opacity: 0.5;
+  padding-left: 0;
+}
+
+/* Hide Contact link in mobile navigation */
+.mobile-nav-link.disabled:nth-child(4) {
+  display: none;
+}
+
+/* Mobile Responsive Design */
+@media (max-width: 768px) {
+  .navigation {
+    display: none;
+  }
+
+  .mobile-nav-container {
+    display: block;
+  }
+}
+
+@media (max-width: 480px) {
+  .navigation {
+    display: none;
+  }
+
+  .mobile-nav-container {
+    display: block;
+  }
+
+  .mobile-menu {
+    width: 280px;
+  }
+
+  .mobile-nav-link {
+    font-size: 16px;
+  }
+}

@@ -1,0 +1,165 @@
+.shop {
+  position: relative;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+}
+
+.shop-background {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: url("../../public/model_690.gif");
+  background-size: 50px;
+  background-position: center;
+  background-repeat: repeat;
+  background-attachment: fixed;
+  z-index: -1;
+}
+
+.shop-content {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 100px 20px 20px;
+  text-align: center;
+  color: white;
+  min-height: 100vh;
+}
+
+.shop-content h1 {
+  color: white;
+  font-size: 2.5rem;
+  margin-bottom: 20px;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
+}
+
+.shop-content p {
+  color: white;
+  font-size: 1.2rem;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.7);
+}
+
+/* Responsive Design for Different Display Sizes */
+
+/* Large Desktop and 4K displays */
+@media (min-width: 1920px) {
+  .shop-background {
+    background-size: cover;
+    background-position: center;
+  }
+}
+
+/* Standard Desktop */
+@media (min-width: 1200px) and (max-width: 1919px) {
+  .shop-background {
+    background-size: cover;
+    background-position: center;
+  }
+}
+
+/* Laptop/Small Desktop */
+@media (min-width: 992px) and (max-width: 1199px) {
+  .shop-background {
+    background-size: cover;
+    background-position: center;
+  }
+}
+
+/* Tablet Landscape */
+@media (min-width: 769px) and (max-width: 991px) {
+  .shop-background {
+    background-size: 50%;
+    background-position: center;
+    background-attachment: scroll;
+  }
+
+  .shop-content {
+    padding: 80px 15px 20px;
+  }
+
+  .shop-content h1 {
+    font-size: 2rem;
+  }
+}
+
+/* Tablet Portrait */
+@media (min-width: 481px) and (max-width: 768px) {
+  .shop {
+    width: 100vw;
+    height: 100vh;
+    overflow: hidden;
+  }
+
+  .shop-background {
+    background-size: cover;
+    background-position: center;
+    background-attachment: scroll;
+  }
+
+  .shop-content {
+    padding: 80px 15px 20px;
+  }
+
+  .shop-content h1 {
+    font-size: 2rem;
+  }
+
+  .shop-content p {
+    font-size: 1rem;
+  }
+}
+
+/* Mobile Phones */
+@media (max-width: 480px) {
+  .shop {
+    width: 100vw;
+    height: 100vh;
+    overflow: hidden;
+  }
+
+  .shop-background {
+    background-size: cover;
+    background-position: center;
+    background-attachment: scroll;
+    min-height: 100vh;
+    min-width: 100vw;
+  }
+
+  .shop-content {
+    padding: 70px 10px 15px;
+  }
+
+  .shop-content h1 {
+    font-size: 1.8rem;
+    margin-bottom: 12px;
+  }
+
+  .shop-content p {
+    font-size: 0.95rem;
+    margin: 8px 0;
+  }
+}
+
+/* Ultra-wide displays */
+@media (min-aspect-ratio: 21/9) {
+  .shop-background {
+    background-size: cover;
+    background-position: center;
+  }
+}
+
+/* Very tall displays (portrait orientation on tablets/phones) */
+@media (max-aspect-ratio: 9/16) {
+  .shop-background {
+    background-size: cover;
+    background-position: center top;
+  }
+}

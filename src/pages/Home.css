@@ -1,0 +1,65 @@
+.home {
+  position: relative;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+}
+
+.background-gif {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: url("../assets/racer.gif");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  z-index: -1;
+}
+
+.home-content {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+/* Mobile responsive adjustments for background gif */
+@media (max-width: 768px) {
+  .background-gif {
+    background-size: contain;
+    background-attachment: scroll;
+  }
+}
+
+@media (max-width: 480px) {
+  .background-gif {
+    background-size: 95%;
+    background-attachment: scroll;
+  }
+}
+
+/* Mobile title text */
+.mobile-title {
+  display: none;
+}
+
+@media (max-width: 768px) {
+  .mobile-title {
+    display: block;
+    position: fixed;
+    top: 85px;
+    right: 220px;
+    color: white;
+    font-size: 1rem;
+    font-weight: 300;
+    z-index: 5;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
+  }
+}
