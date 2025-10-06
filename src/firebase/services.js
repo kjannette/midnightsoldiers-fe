@@ -21,9 +21,9 @@ import {
   createUserWithEmailAndPassword,
 } from "firebase/auth";
 /**
- * Upload a single image to Firebase Cloud Storage
- * @param {File} file - The image file to upload
- * @param {string} path - The storage path (e.g., 'artists/picasso/photo.jpg')
+ * Upload a single file to Firebase Cloud Storage
+ * @param {File} file - The file to upload (image, video, etc.)
+ * @param {string} path - The storage path (e.g., 'reels/reel-id/video.mp4')
  * @param {function} onProgress - Optional callback for upload progress
  * @returns {Promise<string>} - Returns the download URL
  */
@@ -63,7 +63,7 @@ export const uploadImageToStorage = async (file, path, onProgress = null) => {
       return downloadURL;
     }
   } catch (error) {
-    console.error("Error uploading image:", error);
+    console.error("Error uploading file:", error);
     throw error;
   }
 };
@@ -149,10 +149,10 @@ export const getAllArtists = async () => {
 };
 
 /**
- * Get all artists from the 'midnightsoldiers' collection
- * @returns {Promise<Array>} - Returns array of artist documents from midnightsoldiers collection
+ * Get all reels from the 'midnightsoldiers' collection
+ * @returns {Promise<Array>} - Returns array of reel documents from midnightsoldiers collection
  */
-export const getAllMidnightSoldiers = async () => {
+export const getAllReels = async () => {
   try {
     const querySnapshot = await getDocs(collection(db, "midnightsoldiers"));
     const artists = [];
@@ -160,11 +160,11 @@ export const getAllMidnightSoldiers = async () => {
       artists.push({ id: doc.id, ...doc.data() });
     });
 
-    // Sort by exhibition start date (chronological order)
+    // Sort by creation date (most recent first)
     artists.sort((a, b) => {
-      const dateA = new Date(a.exhibitionStartDate || "9999-12-31");
-      const dateB = new Date(b.exhibitionStartDate || "9999-12-31");
-      return dateA - dateB;
+      const dateA = new Date(a.createdAt || "1970-01-01");
+      const dateB = new Date(b.createdAt || "1970-01-01");
+      return dateB - dateA; // Descending order (newest first)
     });
 
     return artists;

@@ -3,18 +3,14 @@ import { v4 as uuidv4 } from "uuid";
 import "./ReelInfo.css";
 import { collection, setDoc, updateDoc, doc } from "firebase/firestore";
 import { db } from "../../firebase/config";
-import {
-  uploadImageToStorage,
-  uploadMultipleImages,
-  getAllMidnightSoldiers,
-} from "../../firebase/services";
+import { uploadImageToStorage, getAllReels } from "../../firebase/services";
 
 const ReelInfo = () => {
   const [formData, setFormData] = useState({
     artistName: "",
     artistBio: "",
     artistPhoto: null,
-    artistPhotoURL: "",
+    reelVideoUrl: "",
     id: null,
   });
 
@@ -34,7 +30,7 @@ const ReelInfo = () => {
     const fetchArtists = async () => {
       try {
         console.log("Fetching artists...");
-        const artists = await getAllMidnightSoldiers();
+        const artists = await getAllReels();
         console.log("Fetched artists:", artists);
         setCurrentArtists(artists);
       } catch (error) {
@@ -59,7 +55,7 @@ const ReelInfo = () => {
       artistBio: artist.artistBio || "",
       artistPhoto: null, // Will be set to null since we're loading existing data
       // Store the existing URLs for reference
-      artistPhotoURL: artist.artistPhotoURL || "",
+      reelVideoUrl: artist.reelVideoUrl || "",
       // Store the artist ID so we can update instead of create
       id: artist.id,
     });
@@ -231,7 +227,7 @@ const ReelInfo = () => {
           artistName: "",
           artistBio: "",
           artistPhoto: null,
-          artistPhotoURL: "",
+          reelVideoUrl: "",
           id: null,
         });
         setSubmitSuccess(false);
@@ -267,23 +263,23 @@ const ReelInfo = () => {
     const uuidName = uuidv4();
 
     try {
-      let artistPhotoURL = null;
+      let reelVideoUrl = null;
 
       // Upload artist photo if provided
       if (formData.artistPhoto) {
-        setSubmitProgress({ stage: "Uploading artist photo...", progress: 30 });
+        setSubmitProgress({ stage: "Uploading reel video...", progress: 30 });
         const artistPhotoPath = `artists/${uuidName}/photo/${formData.artistPhoto.name}`;
-        artistPhotoURL = await uploadImageToStorage(
+        reelVideoUrl = await uploadImageToStorage(
           formData.artistPhoto,
           artistPhotoPath,
           (progress) => {
             setSubmitProgress({
-              stage: "Uploading artist photo...",
+              stage: "Uploading reel video...",
               progress: 30 + progress * 0.3, // 30-60% of progress bar
             });
           }
         );
-        console.log("Artist photo uploaded:", artistPhotoURL);
+        console.log("Reel video uploaded:", reelVideoUrl);
       }
 
       // Prepare data for Firestore
@@ -291,7 +287,7 @@ const ReelInfo = () => {
       const data = {
         artistName: formData.artistName,
         artistBio: formData.artistBio,
-        artistPhotoURL: artistPhotoURL,
+        reelVideoUrl: reelVideoUrl,
         createdAt: new Date().toISOString(),
         updatedAt: new Date().toISOString(),
       };
@@ -311,7 +307,7 @@ const ReelInfo = () => {
           artistName: "",
           artistBio: "",
           artistPhoto: null,
-          artistPhotoURL: "",
+          reelVideoUrl: "",
           id: null,
         });
         setSubmitSuccess(false);

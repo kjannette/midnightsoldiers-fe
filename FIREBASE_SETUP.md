@@ -18,7 +18,7 @@ This document provides instructions for setting up Firebase for the Midnight Sol
 export const apiKey = "your-api-key-here";
 export const authDomain = "your-project-id.firebaseapp.com";
 export const projectId = "your-project-id";
-export const storageBucket = "your-project-id.appspot.com";
+export const storageBucket = "your-project-id.firebasestorage.app";
 export const messagingSenderId = "your-sender-id";
 export const appId = "your-app-id";
 ```
