@@ -7,68 +7,76 @@ import { uploadImageToStorage, getAllReels } from "../../firebase/services";
 
 const ReelInfo = () => {
   const [formData, setFormData] = useState({
-    artistName: "",
-    artistBio: "",
-    artistPhoto: null,
+    reelName: "",
+    reelDescription: "",
+    reelVideo: null,
     reelVideoUrl: "",
     id: null,
   });
 
   const [dragStates, setDragStates] = useState({
-    artistPhoto: false,
+    reelVideo: false,
   });
 
   const [errors, setErrors] = useState({});
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitProgress, setSubmitProgress] = useState(null);
   const [submitSuccess, setSubmitSuccess] = useState(false);
-  const [currentArtists, setCurrentArtists] = useState([]);
-  const [loadingArtists, setLoadingArtists] = useState(true);
+  const [currentreels, setCurrentreels] = useState([]);
+  const [loadingreels, setLoadingreels] = useState(true);
+  const [reelSize, setReelSize] = useState(null);
 
-  // Fetch current artists on component mount and check for selected artist
+  // Fetch current reels on component mount and check for selected reel
   useEffect(() => {
-    const fetchArtists = async () => {
+    const fetchreels = async () => {
       try {
-        console.log("Fetching artists...");
-        const artists = await getAllReels();
-        console.log("Fetched artists:", artists);
-        setCurrentArtists(artists);
+        console.log("Fetching reels...");
+        const reels = await getAllReels();
+        console.log("Fetched reels:", reels);
+        setCurrentreels(reels);
       } catch (error) {
-        console.error("Error fetching artists:", error);
+        console.error("Error fetching reels:", error);
       } finally {
-        setLoadingArtists(false);
+        setLoadingreels(false);
       }
     };
 
-    fetchArtists();
+    fetchreels();
   }, []);
 
-  // Handle clicking on artist ID to populate form
-  const handleArtistIdClick = (artist) => {
+  // Handle clicking on reel ID to populate form
+  const handlereelIdClick = (reel) => {
     // Clear any existing errors and success messages
     setErrors({});
     setSubmitSuccess(false);
 
-    // Populate form data with the artist's existing data
+    // Populate form data with the reel's existing data
     setFormData({
-      artistName: artist.artistName || "",
-      artistBio: artist.artistBio || "",
-      artistPhoto: null, // Will be set to null since we're loading existing data
+      reelName: reel.reelName || "",
+      reelDescription: reel.reelDescription || "",
+      reelVideo: null, // Will be set to null since we're loading existing data
       // Store the existing URLs for reference
-      reelVideoUrl: artist.reelVideoUrl || "",
-      // Store the artist ID so we can update instead of create
-      id: artist.id,
+      reelVideoUrl: reel.reelVideoUrl || "",
+      // Store the reel ID so we can update instead of create
+      id: reel.id,
     });
 
     // Scroll to top of the form so user can see the populated data
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
+  // Method to calculate file size in MB
+  const calculateFileSizeInMB = (file) => {
+    const sizeInBytes = file.size;
+    const sizeInMB = (sizeInBytes / (1024 * 1024)).toFixed(2);
+    return parseFloat(sizeInMB);
+  };
+
   const handleInputChange = (e) => {
     const { name, value } = e.target;
 
     // Handle bio character limit
-    if (name === "artistBio" && value.length > 2500) {
+    if (name === "reelDescription" && value.length > 2500) {
       return;
     }
 
@@ -111,7 +119,7 @@ const ReelInfo = () => {
 
     const files = Array.from(e.dataTransfer.files);
 
-    if (fieldName === "artistPhoto") {
+    if (fieldName === "reelVideo") {
       // Only accept one video file for reel video
       if (files.length > 0) {
         const file = files[0];
@@ -131,20 +139,25 @@ const ReelInfo = () => {
           allowedExtensions.includes(fileExtension);
 
         if (isValidType) {
+          // Calculate and store file size
+          const fileSizeInMB = calculateFileSizeInMB(file);
+          setReelSize(fileSizeInMB);
+          console.log(`Reel video file size: ${fileSizeInMB} MB`);
+
           // Clear any previous errors
           setErrors((prev) => ({
             ...prev,
-            artistPhoto: "",
+            reelVideo: "",
           }));
 
           setFormData((prev) => ({
             ...prev,
-            artistPhoto: file,
+            reelVideo: file,
           }));
         } else {
           setErrors((prev) => ({
             ...prev,
-            artistPhoto: "Please select a valid video file (MP4, MOV, or AVI)",
+            reelVideo: "Please select a valid video file (MP4, MOV, or AVI)",
           }));
         }
       }
@@ -154,7 +167,7 @@ const ReelInfo = () => {
   const handleFileInput = (e, fieldName) => {
     const files = Array.from(e.target.files);
 
-    if (fieldName === "artistPhoto" && files.length > 0) {
+    if (fieldName === "reelVideo" && files.length > 0) {
       const file = files[0];
       const allowedVideoTypes = [
         "video/mp4",
@@ -174,38 +187,45 @@ const ReelInfo = () => {
       if (!isValidType) {
         setErrors((prev) => ({
           ...prev,
-          artistPhoto: "Please select a valid video file (MP4, MOV, or AVI)",
+          reelVideo: "Please select a valid video file (MP4, MOV, or AVI)",
         }));
         return;
       }
 
+      // Calculate and store file size
+      const fileSizeInMB = calculateFileSizeInMB(file);
+      setReelSize(fileSizeInMB);
+      console.log(`Reel video file size: ${fileSizeInMB} MB`);
+
       // Clear any previous errors
       setErrors((prev) => ({
         ...prev,
-        artistPhoto: "",
+        reelVideo: "",
       }));
 
       setFormData((prev) => ({
         ...prev,
-        artistPhoto: file,
+        reelVideo: file,
       }));
     }
   };
 
   const removeFile = (fieldName, index = null) => {
-    if (fieldName === "artistPhoto") {
+    if (fieldName === "reelVideo") {
       setFormData((prev) => ({
         ...prev,
-        artistPhoto: null,
+        reelVideo: null,
       }));
+      // Clear the file size when file is removed
+      setReelSize(null);
     }
   };
 
   const validateForm = () => {
     const newErrors = {};
 
-    if (!formData.artistName.trim()) {
-      newErrors.artistName = "Artist name is required";
+    if (!formData.reelName.trim()) {
+      newErrors.reelName = "reel name is required";
     }
 
     setErrors(newErrors);
@@ -224,17 +244,18 @@ const ReelInfo = () => {
       // Reset form after successful submission
       setTimeout(() => {
         setFormData({
-          artistName: "",
-          artistBio: "",
-          artistPhoto: null,
+          reelName: "",
+          reelDescription: "",
+          reelVideo: null,
           reelVideoUrl: "",
           id: null,
         });
+        setReelSize(null); // Clear file size
         setSubmitSuccess(false);
         setSubmitProgress(null);
       }, 3000);
     } catch (error) {
-      console.error("Error submitting artist info:", error);
+      console.error("Error submitting reel info:", error);
       setSubmitProgress({
         stage: "Error: " + (error.message || "Submission failed"),
         progress: 0,
@@ -265,13 +286,13 @@ const ReelInfo = () => {
     try {
       let reelVideoUrl = null;
 
-      // Upload artist photo if provided
-      if (formData.artistPhoto) {
+      // Upload reel photo if provided
+      if (formData.reelVideo) {
         setSubmitProgress({ stage: "Uploading reel video...", progress: 30 });
-        const artistPhotoPath = `artists/${uuidName}/photo/${formData.artistPhoto.name}`;
+        const reelVideoPath = `reels/${uuidName}/photo/${formData.reelVideo.name}`;
         reelVideoUrl = await uploadImageToStorage(
-          formData.artistPhoto,
-          artistPhotoPath,
+          formData.reelVideo,
+          reelVideoPath,
           (progress) => {
             setSubmitProgress({
               stage: "Uploading reel video...",
@@ -285,11 +306,12 @@ const ReelInfo = () => {
       // Prepare data for Firestore
       setSubmitProgress({ stage: "Saving to database...", progress: 85 });
       const data = {
-        artistName: formData.artistName,
-        artistBio: formData.artistBio,
+        reelName: formData.reelName,
+        reelDescription: formData.reelDescription,
         reelVideoUrl: reelVideoUrl,
         createdAt: new Date().toISOString(),
         updatedAt: new Date().toISOString(),
+        reelSize: reelSize,
       };
 
       // Save to Firestore
@@ -299,22 +321,23 @@ const ReelInfo = () => {
       setSubmitProgress({ stage: "Success!", progress: 100 });
       setSubmitSuccess(true);
 
-      console.log("Artist data saved successfully with ID:", uuidName);
+      console.log("Reel data saved successfully with ID:", uuidName);
 
       // Reset form after successful submission
       setTimeout(() => {
         setFormData({
-          artistName: "",
-          artistBio: "",
-          artistPhoto: null,
+          reelName: "",
+          reelDescription: "",
+          reelVideo: null,
           reelVideoUrl: "",
           id: null,
         });
+        setReelSize(null); // Clear file size
         setSubmitSuccess(false);
         setSubmitProgress(null);
       }, 3000);
     } catch (err) {
-      console.error("Error saving artist data:", err);
+      console.error("Error saving reel data:", err);
       setSubmitProgress({
         stage: "Error: " + (err.message || "Submission failed"),
         progress: 0,
@@ -331,47 +354,48 @@ const ReelInfo = () => {
   }
 
   return (
-    <div className="artist-info">
-      <div className="artist-info-background"></div>
-      <div className="artist-info-content">
+    <div className="reel-info">
+      <div className="reel-info-background"></div>
+      <div className="reel-info-content">
         <div className="form-header">
           <h1>Reel Information Form</h1>
         </div>
 
-        <form className="artist-form">
-          {/* Artist Name */}
+        <form className="reel-form">
+          {/* reel Name */}
           <div className="form-group">
-            <label htmlFor="artistName">Reel Name *</label>
+            <label htmlFor="reelName">Reel Name *</label>
             <input
               type="text"
-              id="artistName"
-              name="artistName"
-              value={formData.artistName}
+              id="reelName"
+              name="reelName"
+              value={formData.reelName}
               onChange={handleInputChange}
-              className={errors.artistName ? "error" : ""}
+              className={errors.reelName ? "error" : ""}
               disabled={isSubmitting}
             />
-            {errors.artistName && (
-              <span className="error-text">{errors.artistName}</span>
+            {errors.reelName && (
+              <span className="error-text">{errors.reelName}</span>
             )}
           </div>
 
-          {/* Artist Bio */}
+          {/* reel Bio */}
           <div className="form-group">
-            <label htmlFor="artistBio">
-              Reel Description ({formData.artistBio.length}/2500 characters)
+            <label htmlFor="reelDescription">
+              Reel Description ({formData.reelDescription.length}/2500
+              characters)
             </label>
             <textarea
-              id="artistBio"
-              name="artistBio"
-              value={formData.artistBio}
+              id="reelDescription"
+              name="reelDescription"
+              value={formData.reelDescription}
               onChange={handleInputChange}
               rows="6"
-              className={errors.artistBio ? "error" : ""}
+              className={errors.reelDescription ? "error" : ""}
               disabled={isSubmitting}
             />
-            {errors.artistBio && (
-              <span className="error-text">{errors.artistBio}</span>
+            {errors.reelDescription && (
+              <span className="error-text">{errors.reelDescription}</span>
             )}
           </div>
 
@@ -380,32 +404,32 @@ const ReelInfo = () => {
             <label>Reel Video File</label>
             <div
               className={`file-drop-zone ${
-                dragStates.artistPhoto ? "drag-over" : ""
+                dragStates.reelVideo ? "drag-over" : ""
               } ${isSubmitting ? "disabled" : ""}`}
               onDragOver={(e) =>
-                !isSubmitting && handleDragOver(e, "artistPhoto")
+                !isSubmitting && handleDragOver(e, "reelVideo")
               }
               onDragLeave={(e) =>
-                !isSubmitting && handleDragLeave(e, "artistPhoto")
+                !isSubmitting && handleDragLeave(e, "reelVideo")
               }
-              onDrop={(e) => !isSubmitting && handleDrop(e, "artistPhoto")}
+              onDrop={(e) => !isSubmitting && handleDrop(e, "reelVideo")}
             >
               <input
                 type="file"
                 accept=".mp4,.mov,.avi,video/mp4,video/quicktime,video/x-msvideo"
-                onChange={(e) => handleFileInput(e, "artistPhoto")}
+                onChange={(e) => handleFileInput(e, "reelVideo")}
                 style={{ display: "none" }}
-                id="artistPhoto"
+                id="reelVideo"
                 disabled={isSubmitting}
               />
-              <label htmlFor="artistPhoto" className="file-input-label">
-                {formData.artistPhoto ? (
+              <label htmlFor="reelVideo" className="file-input-label">
+                {formData.reelVideo ? (
                   <div className="file-preview">
-                    <span>{formData.artistPhoto.name}</span>
+                    <span>{formData.reelVideo.name}</span>
                     {!isSubmitting && (
                       <button
                         type="button"
-                        onClick={() => removeFile("artistPhoto")}
+                        onClick={() => removeFile("reelVideo")}
                         className="remove-file"
                       >
                         ×
@@ -422,8 +446,8 @@ const ReelInfo = () => {
                 )}
               </label>
             </div>
-            {errors.artistPhoto && (
-              <span className="error-text">{errors.artistPhoto}</span>
+            {errors.reelVideo && (
+              <span className="error-text">{errors.reelVideo}</span>
             )}
           </div>
 
@@ -449,7 +473,7 @@ const ReelInfo = () => {
           {/* Success Message */}
           {submitSuccess && (
             <div className="success-message">
-              ✅ Reel information submitted successfully to Firebase!
+              Reel information submitted successfully to Firebase!
             </div>
           )}
 
@@ -464,28 +488,28 @@ const ReelInfo = () => {
           </button>
         </form>
 
-        {/* Current Artists Section */}
-        <div className="current-artists-section">
+        {/* Current reels Section */}
+        <div className="current-reels-section">
           <h2>Current Reels</h2>
-          {loadingArtists ? (
+          {loadingreels ? (
             <p>Loading reels...</p>
-          ) : currentArtists.length === 0 ? (
+          ) : currentreels.length === 0 ? (
             <p>No reels found.</p>
           ) : (
-            <div className="artists-list">
+            <div className="reels-list">
               <p style={{ color: "white", marginBottom: "10px" }}>
-                Found {currentArtists.length} reels:
+                Found {currentreels.length} reels:
               </p>
-              {currentArtists.map((artist) => (
-                <div key={artist.id} className="artist-item">
-                  <span className="artist-name">{artist.artistName}</span>
-                  <span className="artist-separator">.</span>
+              {currentreels.map((reel) => (
+                <div key={reel.id} className="reel-item">
+                  <span className="reel-name">{reel.reelName}</span>
+                  <span className="reel-separator">.</span>
                   <button
-                    className="artist-id-button"
-                    onClick={() => handleArtistIdClick(artist)}
+                    className="reel-id-button"
+                    onClick={() => handlereelIdClick(reel)}
                     type="button"
                   >
-                    {artist.id}
+                    {reel.id}
                   </button>
                 </div>
               ))}
