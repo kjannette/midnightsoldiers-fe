@@ -4,6 +4,7 @@ import "./ReelInfo.css";
 import { collection, setDoc, updateDoc, doc } from "firebase/firestore";
 import { db } from "../../firebase/config";
 import { uploadImageToStorage, getAllReels } from "../../firebase/services";
+import { postReel } from "../../api/api";
 
 const ReelInfo = () => {
   const [formData, setFormData] = useState({
@@ -309,14 +310,24 @@ const ReelInfo = () => {
         reelName: formData.reelName,
         reelDescription: formData.reelDescription,
         reelVideoUrl: reelVideoUrl,
-        createdAt: new Date().toISOString(),
-        createdAt: new Date().toISOString(),
         reelSize: reelSize,
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString(),
       };
 
       // Save to Firestore
       const documentsRef = collection(db, "midnightsoldiers");
       await setDoc(doc(documentsRef, `${uuidName}`), data);
+
+      // Send reel data to backend API
+      setSubmitProgress({ stage: "Sending to backend...", progress: 90 });
+      try {
+        const apiResponse = await postReel(data);
+        console.log("Reel data sent to backend successfully:", apiResponse);
+      } catch (apiError) {
+        console.error("Error sending reel data to backend:", apiError);
+        // Continue with success even if API call fails (Firebase save succeeded)
+      }
 
       setSubmitProgress({ stage: "Success!", progress: 100 });
       setSubmitSuccess(true);
