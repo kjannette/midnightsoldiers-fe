@@ -13,10 +13,6 @@ const ReelInfo = () => {
   const [formData, setFormData] = useState({
     artistName: "",
     artistBio: "",
-    facebookProfile: "",
-    twitterProfile: "",
-    instagramProfile: "",
-    otherProfile: "",
     artistPhoto: null,
     exhibitionName: "",
     exhibitionStartDate: "",
@@ -67,10 +63,6 @@ const ReelInfo = () => {
     setFormData({
       artistName: artist.artistName || "",
       artistBio: artist.artistBio || "",
-      facebookProfile: artist.facebookProfile || "",
-      twitterProfile: artist.twitterProfile || "",
-      instagramProfile: artist.instagramProfile || "",
-      otherProfile: artist.otherProfile || "",
       artistPhoto: null, // Will be set to null since we're loading existing data
       exhibitionName: artist.exhibitionName || "",
       exhibitionStartDate: artist.exhibitionStartDate || "",
@@ -135,12 +127,41 @@ const ReelInfo = () => {
     const files = Array.from(e.dataTransfer.files);
 
     if (fieldName === "artistPhoto") {
-      // Only accept one file for artist photo
-      if (files.length > 0 && files[0].type.startsWith("image/")) {
-        setFormData((prev) => ({
-          ...prev,
-          artistPhoto: files[0],
-        }));
+      // Only accept one video file for reel video
+      if (files.length > 0) {
+        const file = files[0];
+        const allowedVideoTypes = [
+          "video/mp4",
+          "video/quicktime",
+          "video/x-msvideo",
+        ];
+        const allowedExtensions = [".mp4", ".mov", ".avi"];
+
+        // Check file type and extension
+        const fileExtension = file.name
+          .toLowerCase()
+          .substring(file.name.lastIndexOf("."));
+        const isValidType =
+          allowedVideoTypes.includes(file.type) ||
+          allowedExtensions.includes(fileExtension);
+
+        if (isValidType) {
+          // Clear any previous errors
+          setErrors((prev) => ({
+            ...prev,
+            artistPhoto: "",
+          }));
+
+          setFormData((prev) => ({
+            ...prev,
+            artistPhoto: file,
+          }));
+        } else {
+          setErrors((prev) => ({
+            ...prev,
+            artistPhoto: "Please select a valid video file (MP4, MOV, or AVI)",
+          }));
+        }
       }
     } else if (fieldName === "exemplaryWorks") {
       // Accept up to 5 files for exemplary works
@@ -170,9 +191,39 @@ const ReelInfo = () => {
     const files = Array.from(e.target.files);
 
     if (fieldName === "artistPhoto" && files.length > 0) {
+      const file = files[0];
+      const allowedVideoTypes = [
+        "video/mp4",
+        "video/quicktime",
+        "video/x-msvideo",
+      ];
+      const allowedExtensions = [".mp4", ".mov", ".avi"];
+
+      // Check file type and extension
+      const fileExtension = file.name
+        .toLowerCase()
+        .substring(file.name.lastIndexOf("."));
+      const isValidType =
+        allowedVideoTypes.includes(file.type) ||
+        allowedExtensions.includes(fileExtension);
+
+      if (!isValidType) {
+        setErrors((prev) => ({
+          ...prev,
+          artistPhoto: "Please select a valid video file (MP4, MOV, or AVI)",
+        }));
+        return;
+      }
+
+      // Clear any previous errors
+      setErrors((prev) => ({
+        ...prev,
+        artistPhoto: "",
+      }));
+
       setFormData((prev) => ({
         ...prev,
-        artistPhoto: files[0],
+        artistPhoto: file,
       }));
     } else if (fieldName === "exemplaryWorks") {
       const currentWorks = formData.exemplaryWorks || [];
@@ -266,10 +317,6 @@ const ReelInfo = () => {
         setFormData({
           artistName: "",
           artistBio: "",
-          facebookProfile: "",
-          twitterProfile: "",
-          instagramProfile: "",
-          otherProfile: "",
           artistPhoto: null,
           exhibitionName: "",
           exhibitionStartDate: "",
@@ -354,10 +401,6 @@ const ReelInfo = () => {
       const data = {
         artistName: formData.artistName,
         artistBio: formData.artistBio,
-        facebookProfile: formData.facebookProfile,
-        twitterProfile: formData.twitterProfile,
-        instagramProfile: formData.instagramProfile,
-        otherProfile: formData.otherProfile,
         exhibitionName: formData.exhibitionName,
         exhibitionStartDate: formData.exhibitionStartDate,
         exhibitionEndDate: formData.exhibitionEndDate,
@@ -381,10 +424,6 @@ const ReelInfo = () => {
         setFormData({
           artistName: "",
           artistBio: "",
-          facebookProfile: "",
-          twitterProfile: "",
-          instagramProfile: "",
-          otherProfile: "",
           artistPhoto: null,
           exhibitionName: "",
           exhibitionStartDate: "",
@@ -440,7 +479,7 @@ const ReelInfo = () => {
           {/* Artist Bio */}
           <div className="form-group">
             <label htmlFor="artistBio">
-              Reel Bio * ({formData.artistBio.length}/2500 characters)
+              Reel Description ({formData.artistBio.length}/2500 characters)
             </label>
             <textarea
               id="artistBio"
@@ -456,78 +495,9 @@ const ReelInfo = () => {
             )}
           </div>
 
-          {/* Social Media Profiles */}
+          {/* Reel Video */}
           <div className="form-group">
-            <label htmlFor="facebookProfile">Facebook Profile Link</label>
-            <input
-              type="url"
-              id="facebookProfile"
-              name="facebookProfile"
-              value={formData.facebookProfile}
-              onChange={handleInputChange}
-              placeholder="https://www.facebook.com/artist-profile"
-              className={errors.facebookProfile ? "error" : ""}
-              disabled={isSubmitting}
-            />
-            {errors.facebookProfile && (
-              <span className="error-text">{errors.facebookProfile}</span>
-            )}
-          </div>
-
-          <div className="form-group">
-            <label htmlFor="twitterProfile">Twitter Profile Link</label>
-            <input
-              type="url"
-              id="twitterProfile"
-              name="twitterProfile"
-              value={formData.twitterProfile}
-              onChange={handleInputChange}
-              placeholder="https://twitter.com/artist-handle"
-              className={errors.twitterProfile ? "error" : ""}
-              disabled={isSubmitting}
-            />
-            {errors.twitterProfile && (
-              <span className="error-text">{errors.twitterProfile}</span>
-            )}
-          </div>
-
-          <div className="form-group">
-            <label htmlFor="instagramProfile">Instagram Profile Link</label>
-            <input
-              type="url"
-              id="instagramProfile"
-              name="instagramProfile"
-              value={formData.instagramProfile}
-              onChange={handleInputChange}
-              placeholder="https://www.instagram.com/artist-handle"
-              className={errors.instagramProfile ? "error" : ""}
-              disabled={isSubmitting}
-            />
-            {errors.instagramProfile && (
-              <span className="error-text">{errors.instagramProfile}</span>
-            )}
-          </div>
-
-          <div className="form-group">
-            <label htmlFor="otherProfile">Other Profile Link</label>
-            <input
-              type="url"
-              id="otherProfile"
-              name="otherProfile"
-              value={formData.otherProfile}
-              onChange={handleInputChange}
-              placeholder="https://artist-website.com or other social media"
-              className={errors.otherProfile ? "error" : ""}
-              disabled={isSubmitting}
-            />
-            {errors.otherProfile && (
-              <span className="error-text">{errors.otherProfile}</span>
-            )}
-          </div>
-
-          {/* Artist Photo */}
-          <div className="form-group">
-            <label>Artist Personal Photograph</label>
+            <label>Reel Video File</label>
             <div
               className={`file-drop-zone ${
                 dragStates.artistPhoto ? "drag-over" : ""
@@ -542,7 +512,7 @@ const ReelInfo = () => {
             >
               <input
                 type="file"
-                accept="image/*"
+                accept=".mp4,.mov,.avi,video/mp4,video/quicktime,video/x-msvideo"
                 onChange={(e) => handleFileInput(e, "artistPhoto")}
                 style={{ display: "none" }}
                 id="artistPhoto"
@@ -564,11 +534,17 @@ const ReelInfo = () => {
                   </div>
                 ) : (
                   <div className="drop-message">
-                    <p>Drag and drop an image here or click to select</p>
+                    <p>Drag and drop a video file here or click to select</p>
+                    <p className="file-formats">
+                      Supported formats: MP4, MOV, AVI
+                    </p>
                   </div>
                 )}
               </label>
             </div>
+            {errors.artistPhoto && (
+              <span className="error-text">{errors.artistPhoto}</span>
+            )}
           </div>
 
           {/* Exhibition Name */}
