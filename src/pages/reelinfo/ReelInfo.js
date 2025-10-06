@@ -24,6 +24,7 @@ const ReelInfo = () => {
   const [submitSuccess, setSubmitSuccess] = useState(false);
   const [currentArtists, setCurrentArtists] = useState([]);
   const [loadingArtists, setLoadingArtists] = useState(true);
+  const [reelSize, setReelSize] = useState(null);
 
   // Fetch current artists on component mount and check for selected artist
   useEffect(() => {
@@ -62,6 +63,13 @@ const ReelInfo = () => {
 
     // Scroll to top of the form so user can see the populated data
     window.scrollTo({ top: 0, behavior: "smooth" });
+  };
+
+  // Method to calculate file size in MB
+  const calculateFileSizeInMB = (file) => {
+    const sizeInBytes = file.size;
+    const sizeInMB = (sizeInBytes / (1024 * 1024)).toFixed(2);
+    return parseFloat(sizeInMB);
   };
 
   const handleInputChange = (e) => {
@@ -131,6 +139,11 @@ const ReelInfo = () => {
           allowedExtensions.includes(fileExtension);
 
         if (isValidType) {
+          // Calculate and store file size
+          const fileSizeInMB = calculateFileSizeInMB(file);
+          setReelSize(fileSizeInMB);
+          console.log(`Reel video file size: ${fileSizeInMB} MB`);
+
           // Clear any previous errors
           setErrors((prev) => ({
             ...prev,
@@ -179,6 +192,11 @@ const ReelInfo = () => {
         return;
       }
 
+      // Calculate and store file size
+      const fileSizeInMB = calculateFileSizeInMB(file);
+      setReelSize(fileSizeInMB);
+      console.log(`Reel video file size: ${fileSizeInMB} MB`);
+
       // Clear any previous errors
       setErrors((prev) => ({
         ...prev,
@@ -198,6 +216,8 @@ const ReelInfo = () => {
         ...prev,
         reelVideo: null,
       }));
+      // Clear the file size when file is removed
+      setReelSize(null);
     }
   };
 
@@ -230,6 +250,7 @@ const ReelInfo = () => {
           reelVideoUrl: "",
           id: null,
         });
+        setReelSize(null); // Clear file size
         setSubmitSuccess(false);
         setSubmitProgress(null);
       }, 3000);
@@ -310,6 +331,7 @@ const ReelInfo = () => {
           reelVideoUrl: "",
           id: null,
         });
+        setReelSize(null); // Clear file size
         setSubmitSuccess(false);
         setSubmitProgress(null);
       }, 3000);
@@ -450,7 +472,7 @@ const ReelInfo = () => {
           {/* Success Message */}
           {submitSuccess && (
             <div className="success-message">
-              ✅ Reel information submitted successfully to Firebase!
+              Reel information submitted successfully to Firebase!
             </div>
           )}
 
