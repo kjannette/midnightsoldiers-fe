@@ -22,43 +22,43 @@ const ReelInfo = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitProgress, setSubmitProgress] = useState(null);
   const [submitSuccess, setSubmitSuccess] = useState(false);
-  const [currentArtists, setCurrentArtists] = useState([]);
-  const [loadingArtists, setLoadingArtists] = useState(true);
+  const [currentreels, setCurrentreels] = useState([]);
+  const [loadingreels, setLoadingreels] = useState(true);
   const [reelSize, setReelSize] = useState(null);
 
-  // Fetch current artists on component mount and check for selected artist
+  // Fetch current reels on component mount and check for selected reel
   useEffect(() => {
-    const fetchArtists = async () => {
+    const fetchreels = async () => {
       try {
-        console.log("Fetching artists...");
-        const artists = await getAllReels();
-        console.log("Fetched artists:", artists);
-        setCurrentArtists(artists);
+        console.log("Fetching reels...");
+        const reels = await getAllReels();
+        console.log("Fetched reels:", reels);
+        setCurrentreels(reels);
       } catch (error) {
-        console.error("Error fetching artists:", error);
+        console.error("Error fetching reels:", error);
       } finally {
-        setLoadingArtists(false);
+        setLoadingreels(false);
       }
     };
 
-    fetchArtists();
+    fetchreels();
   }, []);
 
-  // Handle clicking on artist ID to populate form
-  const handleArtistIdClick = (artist) => {
+  // Handle clicking on reel ID to populate form
+  const handlereelIdClick = (reel) => {
     // Clear any existing errors and success messages
     setErrors({});
     setSubmitSuccess(false);
 
-    // Populate form data with the artist's existing data
+    // Populate form data with the reel's existing data
     setFormData({
-      reelName: artist.reelName || "",
-      reelDescription: artist.reelDescription || "",
+      reelName: reel.reelName || "",
+      reelDescription: reel.reelDescription || "",
       reelVideo: null, // Will be set to null since we're loading existing data
       // Store the existing URLs for reference
-      reelVideoUrl: artist.reelVideoUrl || "",
-      // Store the artist ID so we can update instead of create
-      id: artist.id,
+      reelVideoUrl: reel.reelVideoUrl || "",
+      // Store the reel ID so we can update instead of create
+      id: reel.id,
     });
 
     // Scroll to top of the form so user can see the populated data
@@ -225,7 +225,7 @@ const ReelInfo = () => {
     const newErrors = {};
 
     if (!formData.reelName.trim()) {
-      newErrors.reelName = "Artist name is required";
+      newErrors.reelName = "reel name is required";
     }
 
     setErrors(newErrors);
@@ -286,10 +286,10 @@ const ReelInfo = () => {
     try {
       let reelVideoUrl = null;
 
-      // Upload artist photo if provided
+      // Upload reel photo if provided
       if (formData.reelVideo) {
         setSubmitProgress({ stage: "Uploading reel video...", progress: 30 });
-        const reelVideoPath = `artists/${uuidName}/photo/${formData.reelVideo.name}`;
+        const reelVideoPath = `reels/${uuidName}/photo/${formData.reelVideo.name}`;
         reelVideoUrl = await uploadImageToStorage(
           formData.reelVideo,
           reelVideoPath,
@@ -337,7 +337,7 @@ const ReelInfo = () => {
         setSubmitProgress(null);
       }, 3000);
     } catch (err) {
-      console.error("Error saving artist data:", err);
+      console.error("Error saving reel data:", err);
       setSubmitProgress({
         stage: "Error: " + (err.message || "Submission failed"),
         progress: 0,
@@ -354,15 +354,15 @@ const ReelInfo = () => {
   }
 
   return (
-    <div className="artist-info">
-      <div className="artist-info-background"></div>
-      <div className="artist-info-content">
+    <div className="reel-info">
+      <div className="reel-info-background"></div>
+      <div className="reel-info-content">
         <div className="form-header">
           <h1>Reel Information Form</h1>
         </div>
 
-        <form className="artist-form">
-          {/* Artist Name */}
+        <form className="reel-form">
+          {/* reel Name */}
           <div className="form-group">
             <label htmlFor="reelName">Reel Name *</label>
             <input
@@ -379,7 +379,7 @@ const ReelInfo = () => {
             )}
           </div>
 
-          {/* Artist Bio */}
+          {/* reel Bio */}
           <div className="form-group">
             <label htmlFor="reelDescription">
               Reel Description ({formData.reelDescription.length}/2500
@@ -488,28 +488,28 @@ const ReelInfo = () => {
           </button>
         </form>
 
-        {/* Current Artists Section */}
-        <div className="current-artists-section">
+        {/* Current reels Section */}
+        <div className="current-reels-section">
           <h2>Current Reels</h2>
-          {loadingArtists ? (
+          {loadingreels ? (
             <p>Loading reels...</p>
-          ) : currentArtists.length === 0 ? (
+          ) : currentreels.length === 0 ? (
             <p>No reels found.</p>
           ) : (
-            <div className="artists-list">
+            <div className="reels-list">
               <p style={{ color: "white", marginBottom: "10px" }}>
-                Found {currentArtists.length} reels:
+                Found {currentreels.length} reels:
               </p>
-              {currentArtists.map((artist) => (
-                <div key={artist.id} className="artist-item">
-                  <span className="artist-name">{artist.reelName}</span>
-                  <span className="artist-separator">.</span>
+              {currentreels.map((reel) => (
+                <div key={reel.id} className="reel-item">
+                  <span className="reel-name">{reel.reelName}</span>
+                  <span className="reel-separator">.</span>
                   <button
-                    className="artist-id-button"
-                    onClick={() => handleArtistIdClick(artist)}
+                    className="reel-id-button"
+                    onClick={() => handlereelIdClick(reel)}
                     type="button"
                   >
-                    {artist.id}
+                    {reel.id}
                   </button>
                 </div>
               ))}
