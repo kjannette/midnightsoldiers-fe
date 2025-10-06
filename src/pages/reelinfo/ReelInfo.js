@@ -7,8 +7,8 @@ import { uploadImageToStorage, getAllReels } from "../../firebase/services";
 
 const ReelInfo = () => {
   const [formData, setFormData] = useState({
-    artistName: "",
-    artistBio: "",
+    reelName: "",
+    reelDescription: "",
     reelVideo: null,
     reelVideoUrl: "",
     id: null,
@@ -51,8 +51,8 @@ const ReelInfo = () => {
 
     // Populate form data with the artist's existing data
     setFormData({
-      artistName: artist.artistName || "",
-      artistBio: artist.artistBio || "",
+      reelName: artist.reelName || "",
+      reelDescription: artist.reelDescription || "",
       reelVideo: null, // Will be set to null since we're loading existing data
       // Store the existing URLs for reference
       reelVideoUrl: artist.reelVideoUrl || "",
@@ -68,7 +68,7 @@ const ReelInfo = () => {
     const { name, value } = e.target;
 
     // Handle bio character limit
-    if (name === "artistBio" && value.length > 2500) {
+    if (name === "reelDescription" && value.length > 2500) {
       return;
     }
 
@@ -204,8 +204,8 @@ const ReelInfo = () => {
   const validateForm = () => {
     const newErrors = {};
 
-    if (!formData.artistName.trim()) {
-      newErrors.artistName = "Artist name is required";
+    if (!formData.reelName.trim()) {
+      newErrors.reelName = "Artist name is required";
     }
 
     setErrors(newErrors);
@@ -224,8 +224,8 @@ const ReelInfo = () => {
       // Reset form after successful submission
       setTimeout(() => {
         setFormData({
-          artistName: "",
-          artistBio: "",
+          reelName: "",
+          reelDescription: "",
           reelVideo: null,
           reelVideoUrl: "",
           id: null,
@@ -285,8 +285,8 @@ const ReelInfo = () => {
       // Prepare data for Firestore
       setSubmitProgress({ stage: "Saving to database...", progress: 85 });
       const data = {
-        artistName: formData.artistName,
-        artistBio: formData.artistBio,
+        reelName: formData.reelName,
+        reelDescription: formData.reelDescription,
         reelVideoUrl: reelVideoUrl,
         createdAt: new Date().toISOString(),
         updatedAt: new Date().toISOString(),
@@ -304,8 +304,8 @@ const ReelInfo = () => {
       // Reset form after successful submission
       setTimeout(() => {
         setFormData({
-          artistName: "",
-          artistBio: "",
+          reelName: "",
+          reelDescription: "",
           reelVideo: null,
           reelVideoUrl: "",
           id: null,
@@ -341,37 +341,38 @@ const ReelInfo = () => {
         <form className="artist-form">
           {/* Artist Name */}
           <div className="form-group">
-            <label htmlFor="artistName">Reel Name *</label>
+            <label htmlFor="reelName">Reel Name *</label>
             <input
               type="text"
-              id="artistName"
-              name="artistName"
-              value={formData.artistName}
+              id="reelName"
+              name="reelName"
+              value={formData.reelName}
               onChange={handleInputChange}
-              className={errors.artistName ? "error" : ""}
+              className={errors.reelName ? "error" : ""}
               disabled={isSubmitting}
             />
-            {errors.artistName && (
-              <span className="error-text">{errors.artistName}</span>
+            {errors.reelName && (
+              <span className="error-text">{errors.reelName}</span>
             )}
           </div>
 
           {/* Artist Bio */}
           <div className="form-group">
-            <label htmlFor="artistBio">
-              Reel Description ({formData.artistBio.length}/2500 characters)
+            <label htmlFor="reelDescription">
+              Reel Description ({formData.reelDescription.length}/2500
+              characters)
             </label>
             <textarea
-              id="artistBio"
-              name="artistBio"
-              value={formData.artistBio}
+              id="reelDescription"
+              name="reelDescription"
+              value={formData.reelDescription}
               onChange={handleInputChange}
               rows="6"
-              className={errors.artistBio ? "error" : ""}
+              className={errors.reelDescription ? "error" : ""}
               disabled={isSubmitting}
             />
-            {errors.artistBio && (
-              <span className="error-text">{errors.artistBio}</span>
+            {errors.reelDescription && (
+              <span className="error-text">{errors.reelDescription}</span>
             )}
           </div>
 
@@ -478,7 +479,7 @@ const ReelInfo = () => {
               </p>
               {currentArtists.map((artist) => (
                 <div key={artist.id} className="artist-item">
-                  <span className="artist-name">{artist.artistName}</span>
+                  <span className="artist-name">{artist.reelName}</span>
                   <span className="artist-separator">.</span>
                   <button
                     className="artist-id-button"
