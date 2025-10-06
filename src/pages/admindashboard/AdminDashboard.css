@@ -10,7 +10,7 @@
   left: 0;
   width: 100%;
   height: 100%;
-  background-image: url("../assets/400followers.gif");
+  background-image: url("../../assets/400followers.gif");
   background-size: 50px;
   background-position: center;
   background-repeat: repeat;
@@ -302,4 +302,3 @@
     padding: 15px;
   }
 }
-
