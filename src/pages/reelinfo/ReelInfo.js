@@ -255,7 +255,7 @@ const ReelInfo = () => {
         setSubmitProgress(null);
       }, 3000);
     } catch (error) {
-      console.error("Error submitting artist info:", error);
+      console.error("Error submitting reel info:", error);
       setSubmitProgress({
         stage: "Error: " + (error.message || "Submission failed"),
         progress: 0,
@@ -311,6 +311,7 @@ const ReelInfo = () => {
         reelVideoUrl: reelVideoUrl,
         createdAt: new Date().toISOString(),
         updatedAt: new Date().toISOString(),
+        reelSize: reelSize,
       };
 
       // Save to Firestore
@@ -320,7 +321,7 @@ const ReelInfo = () => {
       setSubmitProgress({ stage: "Success!", progress: 100 });
       setSubmitSuccess(true);
 
-      console.log("Artist data saved successfully with ID:", uuidName);
+      console.log("Reel data saved successfully with ID:", uuidName);
 
       // Reset form after successful submission
       setTimeout(() => {
