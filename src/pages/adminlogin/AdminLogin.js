@@ -1,6 +1,10 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { signInAdmin, onAuthStateChange } from "../../firebase/services";
+import {
+  signInAdmin,
+  onAuthStateChange,
+  testFirebaseConfig,
+} from "../../firebase/services";
 import "./AdminLogin.css";
 
 const AdminLogin = () => {
@@ -12,8 +16,13 @@ const AdminLogin = () => {
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
 
-  // Check if user is already authenticated
+  // Check if user is already authenticated and test Firebase config
   useEffect(() => {
+    // Test Firebase configuration on component mount
+    testFirebaseConfig().then((result) => {
+      console.log("Firebase config test result:", result);
+    });
+
     const unsubscribe = onAuthStateChange((user) => {
       if (user) {
         // User is signed in, redirect to admin dashboard
@@ -56,6 +65,15 @@ const AdminLogin = () => {
         errorMessage = "Invalid username format.";
       } else if (error.code === "auth/too-many-requests") {
         errorMessage = "Too many failed attempts. Please try again later.";
+      } else if (error.code === "auth/configuration-not-found") {
+        errorMessage =
+          "Authentication service is not properly configured. Please contact the administrator.";
+      } else if (error.code === "auth/network-request-failed") {
+        errorMessage =
+          "Network error. Please check your internet connection and try again.";
+      } else if (error.code === "auth/invalid-credential") {
+        errorMessage =
+          "Invalid login credentials. Please check your username and password.";
       }
 
       setError(errorMessage);

@@ -176,11 +176,47 @@ export const getAllMidnightSoldiers = async () => {
 
 // ===== AUTHENTICATION SERVICES =====
 
+/**
+ * Test Firebase configuration and authentication setup
+ * @returns {Promise<Object>} - Returns configuration status
+ */
+export const testFirebaseConfig = async () => {
+  try {
+    console.log("Testing Firebase configuration...");
+    console.log("Auth object:", auth);
+    console.log("Auth app:", auth?.app);
+    console.log("Auth app options:", auth?.app?.options);
+    console.log("Project ID:", auth?.app?.options?.projectId);
+    console.log("Auth domain:", auth?.app?.options?.authDomain);
+    console.log("API Key:", auth?.app?.options?.apiKey);
+
+    // Test if we can access the auth service
+    const currentUser = auth.currentUser;
+    console.log("Current user:", currentUser);
+
+    return {
+      success: true,
+      authInitialized: !!auth,
+      appInitialized: !!auth?.app,
+      projectId: auth?.app?.options?.projectId,
+      authDomain: auth?.app?.options?.authDomain,
+      currentUser: currentUser,
+    };
+  } catch (error) {
+    console.error("Firebase configuration test failed:", error);
+    return {
+      success: false,
+      error: error.message,
+    };
+  }
+};
+
 // Username to email mapping for admin accounts
 const adminUserMap = {
-  admin: "admin@midnightsoldiers.com",
-  gallery: "gallery@midnightsoldiers.com",
-  midnight: "midnight@midnightsoldiers.com",
+  admin: "sj@sjdev.co",
+  gallery: "sj@sjdev.co",
+  midnight: "sj@sjdev.co",
+  sj: "sj@sjdev.co",
 };
 
 /**
@@ -191,6 +227,11 @@ const adminUserMap = {
  */
 export const signInAdmin = async (usernameOrEmail, password) => {
   try {
+    // Check if Firebase Auth is properly initialized
+    if (!auth) {
+      throw new Error("Firebase Auth is not initialized");
+    }
+
     // Check if it's a username that needs to be mapped to an email
     let emailToUse = usernameOrEmail;
 
@@ -201,18 +242,37 @@ export const signInAdmin = async (usernameOrEmail, password) => {
         emailToUse = mappedEmail;
       } else {
         // If username not found in mapping, throw error
-        throw new Error("auth/user-not-found");
+        const error = new Error("User not found");
+        error.code = "auth/user-not-found";
+        throw error;
       }
     }
+
+    console.log("Attempting to sign in with email:", emailToUse);
 
     const userCredential = await signInWithEmailAndPassword(
       auth,
       emailToUse,
       password
     );
+
+    console.log("Sign in successful:", userCredential.user);
     return userCredential.user;
   } catch (error) {
     console.error("Error signing in:", error);
+
+    // Handle configuration errors specifically
+    if (error.code === "auth/configuration-not-found") {
+      console.error(
+        "Firebase Authentication is not properly configured. Please check:"
+      );
+      console.error(
+        "1. Firebase Authentication is enabled in the Firebase console"
+      );
+      console.error("2. Email/Password provider is enabled");
+      console.error("3. Firebase project configuration is correct");
+    }
+
     throw error;
   }
 };
