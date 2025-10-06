@@ -1,11 +1,11 @@
-.artist-info {
+.reel-info {
   position: relative;
   width: 100vw;
   min-height: 100vh;
   overflow-x: hidden;
 }
 
-.artist-info-background {
+.reel-info-background {
   position: fixed;
   top: 0;
   left: 0;
@@ -23,7 +23,7 @@
   z-index: -1;
 }
 
-.artist-info-content {
+.reel-info-content {
   position: relative;
   z-index: 1;
   padding: 20px;
@@ -64,7 +64,7 @@
   color: #000000;
 }
 
-.artist-form {
+.reel-form {
   max-width: 800px;
   margin: 0 auto;
   background-color: #1a1a1a;
@@ -332,7 +332,7 @@
     font-size: 2rem;
   }
 
-  .artist-form {
+  .reel-form {
     padding: 25px 20px;
     margin: 0 10px;
   }
@@ -348,7 +348,7 @@
 }
 
 @media (max-width: 480px) {
-  .artist-info-content {
+  .reel-info-content {
     padding: 15px 10px;
   }
 
@@ -356,7 +356,7 @@
     font-size: 1.5rem;
   }
 
-  .artist-form {
+  .reel-form {
     padding: 20px 15px;
     margin: 0 5px;
   }
@@ -376,8 +376,8 @@
   }
 }
 
-/* Current Artists Section */
-.current-artists-section {
+/* Current reels Section */
+.current-reels-section {
   text-align: center;
   margin-top: 20px;
   padding: 20px;
@@ -386,7 +386,7 @@
   min-height: 100px;
 }
 
-.current-artists-section h2 {
+.current-reels-section h2 {
   color: white;
   font-family: "Inter Tight", sans-serif;
   font-weight: 600;
@@ -394,7 +394,7 @@
   margin: 0 0 20px 0;
 }
 
-.artists-list {
+.reels-list {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -404,7 +404,7 @@
   padding: 10px;
 }
 
-.artist-item {
+.reel-item {
   display: flex;
   align-items: center;
   gap: 10px;
@@ -413,20 +413,20 @@
   font-size: 1.1rem;
 }
 
-.artist-name {
+.reel-name {
   color: white;
 }
 
-.artist-name-lower {
+.reel-name-lower {
   color: white;
 }
 
-.artist-separator {
+.reel-separator {
   color: white;
   font-weight: bold;
 }
 
-.artist-id-button {
+.reel-id-button {
   background: none;
   border: none;
   color: #4caf50;
@@ -438,6 +438,6 @@
   transition: color 0.3s ease;
 }
 
-.artist-id-button:hover {
+.reel-id-button:hover {
   color: #45a049;
 }
