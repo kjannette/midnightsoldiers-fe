@@ -9,13 +9,13 @@ const ReelInfo = () => {
   const [formData, setFormData] = useState({
     artistName: "",
     artistBio: "",
-    artistPhoto: null,
+    reelVideo: null,
     reelVideoUrl: "",
     id: null,
   });
 
   const [dragStates, setDragStates] = useState({
-    artistPhoto: false,
+    reelVideo: false,
   });
 
   const [errors, setErrors] = useState({});
@@ -53,7 +53,7 @@ const ReelInfo = () => {
     setFormData({
       artistName: artist.artistName || "",
       artistBio: artist.artistBio || "",
-      artistPhoto: null, // Will be set to null since we're loading existing data
+      reelVideo: null, // Will be set to null since we're loading existing data
       // Store the existing URLs for reference
       reelVideoUrl: artist.reelVideoUrl || "",
       // Store the artist ID so we can update instead of create
@@ -111,7 +111,7 @@ const ReelInfo = () => {
 
     const files = Array.from(e.dataTransfer.files);
 
-    if (fieldName === "artistPhoto") {
+    if (fieldName === "reelVideo") {
       // Only accept one video file for reel video
       if (files.length > 0) {
         const file = files[0];
@@ -134,17 +134,17 @@ const ReelInfo = () => {
           // Clear any previous errors
           setErrors((prev) => ({
             ...prev,
-            artistPhoto: "",
+            reelVideo: "",
           }));
 
           setFormData((prev) => ({
             ...prev,
-            artistPhoto: file,
+            reelVideo: file,
           }));
         } else {
           setErrors((prev) => ({
             ...prev,
-            artistPhoto: "Please select a valid video file (MP4, MOV, or AVI)",
+            reelVideo: "Please select a valid video file (MP4, MOV, or AVI)",
           }));
         }
       }
@@ -154,7 +154,7 @@ const ReelInfo = () => {
   const handleFileInput = (e, fieldName) => {
     const files = Array.from(e.target.files);
 
-    if (fieldName === "artistPhoto" && files.length > 0) {
+    if (fieldName === "reelVideo" && files.length > 0) {
       const file = files[0];
       const allowedVideoTypes = [
         "video/mp4",
@@ -174,7 +174,7 @@ const ReelInfo = () => {
       if (!isValidType) {
         setErrors((prev) => ({
           ...prev,
-          artistPhoto: "Please select a valid video file (MP4, MOV, or AVI)",
+          reelVideo: "Please select a valid video file (MP4, MOV, or AVI)",
         }));
         return;
       }
@@ -182,21 +182,21 @@ const ReelInfo = () => {
       // Clear any previous errors
       setErrors((prev) => ({
         ...prev,
-        artistPhoto: "",
+        reelVideo: "",
       }));
 
       setFormData((prev) => ({
         ...prev,
-        artistPhoto: file,
+        reelVideo: file,
       }));
     }
   };
 
   const removeFile = (fieldName, index = null) => {
-    if (fieldName === "artistPhoto") {
+    if (fieldName === "reelVideo") {
       setFormData((prev) => ({
         ...prev,
-        artistPhoto: null,
+        reelVideo: null,
       }));
     }
   };
@@ -226,7 +226,7 @@ const ReelInfo = () => {
         setFormData({
           artistName: "",
           artistBio: "",
-          artistPhoto: null,
+          reelVideo: null,
           reelVideoUrl: "",
           id: null,
         });
@@ -266,12 +266,12 @@ const ReelInfo = () => {
       let reelVideoUrl = null;
 
       // Upload artist photo if provided
-      if (formData.artistPhoto) {
+      if (formData.reelVideo) {
         setSubmitProgress({ stage: "Uploading reel video...", progress: 30 });
-        const artistPhotoPath = `artists/${uuidName}/photo/${formData.artistPhoto.name}`;
+        const reelVideoPath = `artists/${uuidName}/photo/${formData.reelVideo.name}`;
         reelVideoUrl = await uploadImageToStorage(
-          formData.artistPhoto,
-          artistPhotoPath,
+          formData.reelVideo,
+          reelVideoPath,
           (progress) => {
             setSubmitProgress({
               stage: "Uploading reel video...",
@@ -306,7 +306,7 @@ const ReelInfo = () => {
         setFormData({
           artistName: "",
           artistBio: "",
-          artistPhoto: null,
+          reelVideo: null,
           reelVideoUrl: "",
           id: null,
         });
@@ -380,32 +380,32 @@ const ReelInfo = () => {
             <label>Reel Video File</label>
             <div
               className={`file-drop-zone ${
-                dragStates.artistPhoto ? "drag-over" : ""
+                dragStates.reelVideo ? "drag-over" : ""
               } ${isSubmitting ? "disabled" : ""}`}
               onDragOver={(e) =>
-                !isSubmitting && handleDragOver(e, "artistPhoto")
+                !isSubmitting && handleDragOver(e, "reelVideo")
               }
               onDragLeave={(e) =>
-                !isSubmitting && handleDragLeave(e, "artistPhoto")
+                !isSubmitting && handleDragLeave(e, "reelVideo")
               }
-              onDrop={(e) => !isSubmitting && handleDrop(e, "artistPhoto")}
+              onDrop={(e) => !isSubmitting && handleDrop(e, "reelVideo")}
             >
               <input
                 type="file"
                 accept=".mp4,.mov,.avi,video/mp4,video/quicktime,video/x-msvideo"
-                onChange={(e) => handleFileInput(e, "artistPhoto")}
+                onChange={(e) => handleFileInput(e, "reelVideo")}
                 style={{ display: "none" }}
-                id="artistPhoto"
+                id="reelVideo"
                 disabled={isSubmitting}
               />
-              <label htmlFor="artistPhoto" className="file-input-label">
-                {formData.artistPhoto ? (
+              <label htmlFor="reelVideo" className="file-input-label">
+                {formData.reelVideo ? (
                   <div className="file-preview">
-                    <span>{formData.artistPhoto.name}</span>
+                    <span>{formData.reelVideo.name}</span>
                     {!isSubmitting && (
                       <button
                         type="button"
-                        onClick={() => removeFile("artistPhoto")}
+                        onClick={() => removeFile("reelVideo")}
                         className="remove-file"
                       >
                         ×
@@ -422,8 +422,8 @@ const ReelInfo = () => {
                 )}
               </label>
             </div>
-            {errors.artistPhoto && (
-              <span className="error-text">{errors.artistPhoto}</span>
+            {errors.reelVideo && (
+              <span className="error-text">{errors.reelVideo}</span>
             )}
           </div>
 
