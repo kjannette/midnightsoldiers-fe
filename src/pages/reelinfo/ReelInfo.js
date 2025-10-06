@@ -13,23 +13,13 @@ const ReelInfo = () => {
   const [formData, setFormData] = useState({
     artistName: "",
     artistBio: "",
-    facebookProfile: "",
-    twitterProfile: "",
-    instagramProfile: "",
-    otherProfile: "",
     artistPhoto: null,
-    exhibitionName: "",
-    exhibitionStartDate: "",
-    exhibitionEndDate: "",
-    exemplaryWorks: [],
     artistPhotoURL: "",
-    exemplaryWorksURLs: [],
     id: null,
   });
 
   const [dragStates, setDragStates] = useState({
     artistPhoto: false,
-    exemplaryWorks: false,
   });
 
   const [errors, setErrors] = useState({});
@@ -67,18 +57,9 @@ const ReelInfo = () => {
     setFormData({
       artistName: artist.artistName || "",
       artistBio: artist.artistBio || "",
-      facebookProfile: artist.facebookProfile || "",
-      twitterProfile: artist.twitterProfile || "",
-      instagramProfile: artist.instagramProfile || "",
-      otherProfile: artist.otherProfile || "",
       artistPhoto: null, // Will be set to null since we're loading existing data
-      exhibitionName: artist.exhibitionName || "",
-      exhibitionStartDate: artist.exhibitionStartDate || "",
-      exhibitionEndDate: artist.exhibitionEndDate || "",
-      exemplaryWorks: [], // Will be set to empty since we're loading existing data
       // Store the existing URLs for reference
       artistPhotoURL: artist.artistPhotoURL || "",
-      exemplaryWorksURLs: artist.exemplaryWorksURLs || [],
       // Store the artist ID so we can update instead of create
       id: artist.id,
     });
@@ -135,33 +116,41 @@ const ReelInfo = () => {
     const files = Array.from(e.dataTransfer.files);
 
     if (fieldName === "artistPhoto") {
-      // Only accept one file for artist photo
-      if (files.length > 0 && files[0].type.startsWith("image/")) {
-        setFormData((prev) => ({
-          ...prev,
-          artistPhoto: files[0],
-        }));
-      }
-    } else if (fieldName === "exemplaryWorks") {
-      // Accept up to 5 files for exemplary works
-      const imageFiles = files.filter((file) => file.type.startsWith("image/"));
-      const currentWorks = formData.exemplaryWorks || [];
-      const totalFiles = currentWorks.length + imageFiles.length;
+      // Only accept one video file for reel video
+      if (files.length > 0) {
+        const file = files[0];
+        const allowedVideoTypes = [
+          "video/mp4",
+          "video/quicktime",
+          "video/x-msvideo",
+        ];
+        const allowedExtensions = [".mp4", ".mov", ".avi"];
 
-      if (totalFiles <= 5) {
-        setFormData((prev) => ({
-          ...prev,
-          exemplaryWorks: [...currentWorks, ...imageFiles],
-        }));
-      } else {
-        const remainingSlots = 5 - currentWorks.length;
-        setFormData((prev) => ({
-          ...prev,
-          exemplaryWorks: [
-            ...currentWorks,
-            ...imageFiles.slice(0, remainingSlots),
-          ],
-        }));
+        // Check file type and extension
+        const fileExtension = file.name
+          .toLowerCase()
+          .substring(file.name.lastIndexOf("."));
+        const isValidType =
+          allowedVideoTypes.includes(file.type) ||
+          allowedExtensions.includes(fileExtension);
+
+        if (isValidType) {
+          // Clear any previous errors
+          setErrors((prev) => ({
+            ...prev,
+            artistPhoto: "",
+          }));
+
+          setFormData((prev) => ({
+            ...prev,
+            artistPhoto: file,
+          }));
+        } else {
+          setErrors((prev) => ({
+            ...prev,
+            artistPhoto: "Please select a valid video file (MP4, MOV, or AVI)",
+          }));
+        }
       }
     }
   };
@@ -170,26 +159,40 @@ const ReelInfo = () => {
     const files = Array.from(e.target.files);
 
     if (fieldName === "artistPhoto" && files.length > 0) {
+      const file = files[0];
+      const allowedVideoTypes = [
+        "video/mp4",
+        "video/quicktime",
+        "video/x-msvideo",
+      ];
+      const allowedExtensions = [".mp4", ".mov", ".avi"];
+
+      // Check file type and extension
+      const fileExtension = file.name
+        .toLowerCase()
+        .substring(file.name.lastIndexOf("."));
+      const isValidType =
+        allowedVideoTypes.includes(file.type) ||
+        allowedExtensions.includes(fileExtension);
+
+      if (!isValidType) {
+        setErrors((prev) => ({
+          ...prev,
+          artistPhoto: "Please select a valid video file (MP4, MOV, or AVI)",
+        }));
+        return;
+      }
+
+      // Clear any previous errors
+      setErrors((prev) => ({
+        ...prev,
+        artistPhoto: "",
+      }));
+
       setFormData((prev) => ({
         ...prev,
-        artistPhoto: files[0],
+        artistPhoto: file,
       }));
-    } else if (fieldName === "exemplaryWorks") {
-      const currentWorks = formData.exemplaryWorks || [];
-      const totalFiles = currentWorks.length + files.length;
-
-      if (totalFiles <= 5) {
-        setFormData((prev) => ({
-          ...prev,
-          exemplaryWorks: [...currentWorks, ...files],
-        }));
-      } else {
-        const remainingSlots = 5 - currentWorks.length;
-        setFormData((prev) => ({
-          ...prev,
-          exemplaryWorks: [...currentWorks, ...files.slice(0, remainingSlots)],
-        }));
-      }
     }
   };
 
@@ -199,53 +202,14 @@ const ReelInfo = () => {
         ...prev,
         artistPhoto: null,
       }));
-    } else if (fieldName === "exemplaryWorks" && index !== null) {
-      setFormData((prev) => ({
-        ...prev,
-        exemplaryWorks: prev.exemplaryWorks.filter((_, i) => i !== index),
-      }));
     }
   };
 
   const validateForm = () => {
     const newErrors = {};
-    const today = new Date();
-    today.setHours(0, 0, 0, 0); // Set to start of day for comparison
 
     if (!formData.artistName.trim()) {
       newErrors.artistName = "Artist name is required";
-    }
-
-    if (!formData.artistBio.trim()) {
-      newErrors.artistBio = "Artist bio is required";
-    }
-
-    if (!formData.exhibitionName.trim()) {
-      newErrors.exhibitionName = "Exhibition name is required";
-    }
-
-    if (!formData.exhibitionStartDate) {
-      newErrors.exhibitionStartDate = "Exhibition start date is required";
-    } else {
-      // Check if start date is in the past
-      const startDate = new Date(formData.exhibitionStartDate);
-      if (startDate < today) {
-        newErrors.exhibitionStartDate =
-          "Exhibition start date cannot be in the past";
-      }
-    }
-
-    if (!formData.exhibitionEndDate) {
-      newErrors.exhibitionEndDate = "Exhibition end date is required";
-    }
-
-    if (formData.exhibitionStartDate && formData.exhibitionEndDate) {
-      const startDate = new Date(formData.exhibitionStartDate);
-      const endDate = new Date(formData.exhibitionEndDate);
-
-      if (endDate <= startDate) {
-        newErrors.exhibitionEndDate = "End date must be after start date";
-      }
     }
 
     setErrors(newErrors);
@@ -266,15 +230,9 @@ const ReelInfo = () => {
         setFormData({
           artistName: "",
           artistBio: "",
-          facebookProfile: "",
-          twitterProfile: "",
-          instagramProfile: "",
-          otherProfile: "",
           artistPhoto: null,
-          exhibitionName: "",
-          exhibitionStartDate: "",
-          exhibitionEndDate: "",
-          exemplaryWorks: [],
+          artistPhotoURL: "",
+          id: null,
         });
         setSubmitSuccess(false);
         setSubmitProgress(null);
@@ -310,7 +268,6 @@ const ReelInfo = () => {
 
     try {
       let artistPhotoURL = null;
-      let exemplaryWorksURLs = [];
 
       // Upload artist photo if provided
       if (formData.artistPhoto) {
@@ -329,40 +286,12 @@ const ReelInfo = () => {
         console.log("Artist photo uploaded:", artistPhotoURL);
       }
 
-      // Upload exemplary works if provided
-      if (formData.exemplaryWorks && formData.exemplaryWorks.length > 0) {
-        setSubmitProgress({
-          stage: "Uploading artwork images...",
-          progress: 60,
-        });
-        const worksBasePath = `artists/${uuidName}/works/`;
-        exemplaryWorksURLs = await uploadMultipleImages(
-          formData.exemplaryWorks,
-          worksBasePath,
-          (progress) => {
-            setSubmitProgress({
-              stage: "Uploading artwork images...",
-              progress: 60 + progress * 0.25, // 60-85% of progress bar
-            });
-          }
-        );
-        console.log("Exemplary works uploaded:", exemplaryWorksURLs);
-      }
-
       // Prepare data for Firestore
       setSubmitProgress({ stage: "Saving to database...", progress: 85 });
       const data = {
         artistName: formData.artistName,
         artistBio: formData.artistBio,
-        facebookProfile: formData.facebookProfile,
-        twitterProfile: formData.twitterProfile,
-        instagramProfile: formData.instagramProfile,
-        otherProfile: formData.otherProfile,
-        exhibitionName: formData.exhibitionName,
-        exhibitionStartDate: formData.exhibitionStartDate,
-        exhibitionEndDate: formData.exhibitionEndDate,
         artistPhotoURL: artistPhotoURL,
-        exemplaryWorksURLs: exemplaryWorksURLs,
         createdAt: new Date().toISOString(),
         updatedAt: new Date().toISOString(),
       };
@@ -381,15 +310,9 @@ const ReelInfo = () => {
         setFormData({
           artistName: "",
           artistBio: "",
-          facebookProfile: "",
-          twitterProfile: "",
-          instagramProfile: "",
-          otherProfile: "",
           artistPhoto: null,
-          exhibitionName: "",
-          exhibitionStartDate: "",
-          exhibitionEndDate: "",
-          exemplaryWorks: [],
+          artistPhotoURL: "",
+          id: null,
         });
         setSubmitSuccess(false);
         setSubmitProgress(null);
@@ -440,7 +363,7 @@ const ReelInfo = () => {
           {/* Artist Bio */}
           <div className="form-group">
             <label htmlFor="artistBio">
-              Reel Bio * ({formData.artistBio.length}/2500 characters)
+              Reel Description ({formData.artistBio.length}/2500 characters)
             </label>
             <textarea
               id="artistBio"
@@ -456,78 +379,9 @@ const ReelInfo = () => {
             )}
           </div>
 
-          {/* Social Media Profiles */}
+          {/* Reel Video */}
           <div className="form-group">
-            <label htmlFor="facebookProfile">Facebook Profile Link</label>
-            <input
-              type="url"
-              id="facebookProfile"
-              name="facebookProfile"
-              value={formData.facebookProfile}
-              onChange={handleInputChange}
-              placeholder="https://www.facebook.com/artist-profile"
-              className={errors.facebookProfile ? "error" : ""}
-              disabled={isSubmitting}
-            />
-            {errors.facebookProfile && (
-              <span className="error-text">{errors.facebookProfile}</span>
-            )}
-          </div>
-
-          <div className="form-group">
-            <label htmlFor="twitterProfile">Twitter Profile Link</label>
-            <input
-              type="url"
-              id="twitterProfile"
-              name="twitterProfile"
-              value={formData.twitterProfile}
-              onChange={handleInputChange}
-              placeholder="https://twitter.com/artist-handle"
-              className={errors.twitterProfile ? "error" : ""}
-              disabled={isSubmitting}
-            />
-            {errors.twitterProfile && (
-              <span className="error-text">{errors.twitterProfile}</span>
-            )}
-          </div>
-
-          <div className="form-group">
-            <label htmlFor="instagramProfile">Instagram Profile Link</label>
-            <input
-              type="url"
-              id="instagramProfile"
-              name="instagramProfile"
-              value={formData.instagramProfile}
-              onChange={handleInputChange}
-              placeholder="https://www.instagram.com/artist-handle"
-              className={errors.instagramProfile ? "error" : ""}
-              disabled={isSubmitting}
-            />
-            {errors.instagramProfile && (
-              <span className="error-text">{errors.instagramProfile}</span>
-            )}
-          </div>
-
-          <div className="form-group">
-            <label htmlFor="otherProfile">Other Profile Link</label>
-            <input
-              type="url"
-              id="otherProfile"
-              name="otherProfile"
-              value={formData.otherProfile}
-              onChange={handleInputChange}
-              placeholder="https://artist-website.com or other social media"
-              className={errors.otherProfile ? "error" : ""}
-              disabled={isSubmitting}
-            />
-            {errors.otherProfile && (
-              <span className="error-text">{errors.otherProfile}</span>
-            )}
-          </div>
-
-          {/* Artist Photo */}
-          <div className="form-group">
-            <label>Artist Personal Photograph</label>
+            <label>Reel Video File</label>
             <div
               className={`file-drop-zone ${
                 dragStates.artistPhoto ? "drag-over" : ""
@@ -542,7 +396,7 @@ const ReelInfo = () => {
             >
               <input
                 type="file"
-                accept="image/*"
+                accept=".mp4,.mov,.avi,video/mp4,video/quicktime,video/x-msvideo"
                 onChange={(e) => handleFileInput(e, "artistPhoto")}
                 style={{ display: "none" }}
                 id="artistPhoto"
@@ -564,119 +418,17 @@ const ReelInfo = () => {
                   </div>
                 ) : (
                   <div className="drop-message">
-                    <p>Drag and drop an image here or click to select</p>
+                    <p>Drag and drop a video file here or click to select</p>
+                    <p className="file-formats">
+                      Supported formats: MP4, MOV, AVI
+                    </p>
                   </div>
                 )}
               </label>
             </div>
-          </div>
-
-          {/* Exhibition Name */}
-          <div className="form-group">
-            <label htmlFor="exhibitionName">Exhibition Name *</label>
-            <input
-              type="text"
-              id="exhibitionName"
-              name="exhibitionName"
-              value={formData.exhibitionName}
-              onChange={handleInputChange}
-              className={errors.exhibitionName ? "error" : ""}
-              disabled={isSubmitting}
-            />
-            {errors.exhibitionName && (
-              <span className="error-text">{errors.exhibitionName}</span>
+            {errors.artistPhoto && (
+              <span className="error-text">{errors.artistPhoto}</span>
             )}
-          </div>
-
-          {/* Exhibition Dates */}
-          <div className="form-row">
-            <div className="form-group">
-              <label htmlFor="exhibitionStartDate">
-                Exhibition Start Date *
-              </label>
-              <input
-                type="date"
-                id="exhibitionStartDate"
-                name="exhibitionStartDate"
-                value={formData.exhibitionStartDate}
-                onChange={handleInputChange}
-                className={errors.exhibitionStartDate ? "error" : ""}
-                disabled={isSubmitting}
-              />
-              {errors.exhibitionStartDate && (
-                <span className="error-text">{errors.exhibitionStartDate}</span>
-              )}
-            </div>
-
-            <div className="form-group">
-              <label htmlFor="exhibitionEndDate">Exhibition End Date *</label>
-              <input
-                type="date"
-                id="exhibitionEndDate"
-                name="exhibitionEndDate"
-                value={formData.exhibitionEndDate}
-                onChange={handleInputChange}
-                className={errors.exhibitionEndDate ? "error" : ""}
-                disabled={isSubmitting}
-              />
-              {errors.exhibitionEndDate && (
-                <span className="error-text">{errors.exhibitionEndDate}</span>
-              )}
-            </div>
-          </div>
-
-          {/* Exemplary Works */}
-          <div className="form-group">
-            <label>Exemplary Works (Up to 5 images)</label>
-            <div
-              className={`file-drop-zone multiple ${
-                dragStates.exemplaryWorks ? "drag-over" : ""
-              } ${isSubmitting ? "disabled" : ""}`}
-              onDragOver={(e) =>
-                !isSubmitting && handleDragOver(e, "exemplaryWorks")
-              }
-              onDragLeave={(e) =>
-                !isSubmitting && handleDragLeave(e, "exemplaryWorks")
-              }
-              onDrop={(e) => !isSubmitting && handleDrop(e, "exemplaryWorks")}
-            >
-              <input
-                type="file"
-                accept="image/*"
-                multiple
-                onChange={(e) => handleFileInput(e, "exemplaryWorks")}
-                style={{ display: "none" }}
-                id="exemplaryWorks"
-                disabled={isSubmitting}
-              />
-              <label htmlFor="exemplaryWorks" className="file-input-label">
-                {formData.exemplaryWorks.length > 0 ? (
-                  <div className="files-preview">
-                    {formData.exemplaryWorks.map((file, index) => (
-                      <div key={index} className="file-preview">
-                        <span>{file.name}</span>
-                        {!isSubmitting && (
-                          <button
-                            type="button"
-                            onClick={() => removeFile("exemplaryWorks", index)}
-                            className="remove-file"
-                          >
-                            ×
-                          </button>
-                        )}
-                      </div>
-                    ))}
-                    {formData.exemplaryWorks.length < 5 && !isSubmitting && (
-                      <div className="add-more">+ Add more images</div>
-                    )}
-                  </div>
-                ) : (
-                  <div className="drop-message">
-                    <p>Drag and drop up to 5 images here or click to select</p>
-                  </div>
-                )}
-              </label>
-            </div>
           </div>
 
           {/* Progress Display */}
