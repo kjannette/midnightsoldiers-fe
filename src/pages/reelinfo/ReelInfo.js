@@ -319,11 +319,42 @@ const ReelInfo = () => {
       const documentsRef = collection(db, "midnightsoldiers");
       await setDoc(doc(documentsRef, `${uuidName}`), data);
 
-      // Send reel data to backend API
-      setSubmitProgress({ stage: "Sending to backend...", progress: 90 });
+      // Send reel data to backend API for social media posting
+      setSubmitProgress({ stage: "Posting to social media...", progress: 90 });
       try {
+        // First send to original backend endpoint
         const apiResponse = await postReel(data);
         console.log("Reel data sent to backend successfully:", apiResponse);
+
+        // Now send PUT request to trigger Facebook and Instagram posting
+        const socialMediaData = {
+          reelName: formData.reelName,
+          reelDescription: formData.reelDescription,
+          reelVideoUrl: reelVideoUrl,
+          reelSize: reelSize,
+          reelId: uuidName,
+        };
+
+        const putResponse = await fetch(
+          `https://www.midnightsoldiers.com:3200/api/post-to-social/${uuidName}`,
+          {
+            method: "PUT",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify(socialMediaData),
+          }
+        );
+
+        if (putResponse.ok) {
+          const putResult = await putResponse.json();
+          console.log("Social media posting initiated:", putResult);
+        } else {
+          console.error(
+            "Failed to initiate social media posting:",
+            putResponse.statusText
+          );
+        }
       } catch (apiError) {
         console.error("Error sending reel data to backend:", apiError);
         // Continue with success even if API call fails (Firebase save succeeded)

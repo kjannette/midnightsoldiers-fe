@@ -11,6 +11,8 @@ import AdminLogin from "./pages/adminlogin/AdminLogin";
 import ReelInfo from "./pages/reelinfo/ReelInfo";
 import AdminDashboard from "./pages/admindashboard/AdminDashboard";
 import Exhibitions from "./pages/exhibitions/Exhibitions";
+import ReelLogin from "./pages/reellogin/ReelLogin";
+import VideoInfo from "./pages/videoinfo/VideoInfo";
 import "./App.css";
 
 function App() {
@@ -29,6 +31,8 @@ function App() {
           <Route path="/adminlogin" element={<AdminLogin />} />
           <Route path="/reelinfo" element={<ReelInfo />} />
           <Route path="/admin" element={<AdminDashboard />} />
+          <Route path="/reellogin" element={<ReelLogin />} />
+          <Route path="/videoinfo" element={<VideoInfo />} />
         </Routes>
       </div>
     </Router>
