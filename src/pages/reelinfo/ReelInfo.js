@@ -6,6 +6,12 @@ import { db } from "../../firebase/config";
 import { uploadImageToStorage, getAllReels } from "../../firebase/services";
 import { postReel } from "../../api/api";
 
+// Import API URL configuration
+const apiUrl =
+  process.env.NODE_ENV === "development"
+    ? process.env.REACT_APP_API_DEV || "http://localhost:3200"
+    : process.env.REACT_APP_API_PROD || "https://www.midnightsoldiers.com:3200";
+
 const ReelInfo = () => {
   const [formData, setFormData] = useState({
     reelName: "",
@@ -76,8 +82,8 @@ const ReelInfo = () => {
   const handleInputChange = (e) => {
     const { name, value } = e.target;
 
-    // Handle bio character limit
-    if (name === "reelDescription" && value.length > 2500) {
+    // Handle description character limit (Instagram limit is 2200)
+    if (name === "reelDescription" && value.length > 2200) {
       return;
     }
 
@@ -315,18 +321,22 @@ const ReelInfo = () => {
         updatedAt: new Date().toISOString(),
       };
 
-      // Save to Firestore
-      const documentsRef = collection(db, "midnightsoldiers");
-      await setDoc(doc(documentsRef, `${uuidName}`), data);
+      // Save to Firestore with error handling
+      try {
+        const documentsRef = collection(db, "midnightsoldiers");
+        await setDoc(doc(documentsRef, `${uuidName}`), data);
+        console.log("Successfully saved to Firebase:", uuidName);
+      } catch (firebaseError) {
+        console.error("Firebase save error:", firebaseError);
+        throw new Error(
+          `Failed to save to database: ${firebaseError.message}`
+        );
+      }
 
       // Send reel data to backend API for social media posting
       setSubmitProgress({ stage: "Posting to social media...", progress: 90 });
       try {
-        // First send to original backend endpoint
-        const apiResponse = await postReel(data);
-        console.log("Reel data sent to backend successfully:", apiResponse);
-
-        // Now send PUT request to trigger Facebook and Instagram posting
+        // Send PUT request to trigger Facebook and Instagram posting
         const socialMediaData = {
           reelName: formData.reelName,
           reelDescription: formData.reelDescription,
@@ -336,7 +346,7 @@ const ReelInfo = () => {
         };
 
         const putResponse = await fetch(
-          `https://www.midnightsoldiers.com:3200/api/post-to-social/${uuidName}`,
+          `${apiUrl}/api/post-to-social/${uuidName}`,
           {
             method: "PUT",
             headers: {
@@ -424,7 +434,7 @@ const ReelInfo = () => {
           {/* reel Bio */}
           <div className="form-group">
             <label htmlFor="reelDescription">
-              Reel Description ({formData.reelDescription.length}/2500
+              Reel Description ({formData.reelDescription.length}/2200
               characters)
             </label>
             <textarea

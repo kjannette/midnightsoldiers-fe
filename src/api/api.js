@@ -1,7 +1,7 @@
 const apiUrl =
   process.env.NODE_ENV === "development"
-    ? process.env.REACT_APP_API_DEV
-    : process.env.REACT_APP_API_PROD;
+    ? process.env.REACT_APP_API_DEV || "http://localhost:3200"
+    : process.env.REACT_APP_API_PROD || "https://www.midnightsoldiers.com:3200";
 
 export async function postReel(reelData) {
   const data = JSON.stringify(reelData);

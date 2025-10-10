@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { signInAdmin } from "../../firebase/services";
 import "./ReelLogin.css";
 
 const ReelLogin = () => {
@@ -27,19 +28,34 @@ const ReelLogin = () => {
     setError("");
 
     try {
-      // Simple authentication check - you can modify this logic
-      if (
-        credentials.username === "admin" &&
-        credentials.password === "password123"
-      ) {
-        // Successful login - redirect to videoinfo page
-        navigate("/videoinfo");
-      } else {
-        setError("Invalid username or password");
-      }
+      // Use Firebase authentication
+      const user = await signInAdmin(credentials.username, credentials.password);
+      console.log("Login successful:", user);
+      
+      // Store authentication state
+      sessionStorage.setItem("isAuthenticated", "true");
+      sessionStorage.setItem("userEmail", user.email);
+      
+      // Successful login - redirect to videoinfo page
+      navigate("/videoinfo");
     } catch (error) {
       console.error("Login error:", error);
-      setError("Login failed. Please try again.");
+      
+      // Handle specific Firebase auth errors
+      let errorMessage = "Login failed. Please try again.";
+      if (error.code === "auth/user-not-found") {
+        errorMessage = "User not found. Please check your username.";
+      } else if (error.code === "auth/wrong-password") {
+        errorMessage = "Invalid username or password";
+      } else if (error.code === "auth/invalid-email") {
+        errorMessage = "Invalid email format";
+      } else if (error.code === "auth/too-many-requests") {
+        errorMessage = "Too many failed attempts. Please try again later.";
+      } else if (error.code === "auth/network-request-failed") {
+        errorMessage = "Network error. Please check your connection.";
+      }
+      
+      setError(errorMessage);
     } finally {
       setIsLoading(false);
     }
@@ -107,7 +123,7 @@ const ReelLogin = () => {
           </form>
 
           <div className="reel-login-footer">
-            <p>Demo credentials: admin / password123</p>
+            <p>Use your admin credentials (username: admin, gallery, midnight, or sj)</p>
           </div>
         </div>
       </div>
