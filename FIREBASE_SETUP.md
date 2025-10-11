@@ -158,13 +158,13 @@ service firebase.storage {
 
 ### Login Credentials
 
-- URL: `/adminlogin`
+- URL: `/reellogin`
 - Use the email/password you created in Firebase Authentication
 
 ### Admin Routes
 
 - `/admin` - Dashboard overview
-- `/reelinfo` - Add new reel form
+- `/videoinfo` - Add new reel form
 
 ## Deployment Notes
 

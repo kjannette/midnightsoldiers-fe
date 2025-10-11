@@ -22,7 +22,7 @@ const AdminDashboard = () => {
   useEffect(() => {
     const unsubscribe = onAuthStateChange((user) => {
       if (!user) {
-        navigate("/adminlogin");
+        navigate("/reellogin");
       }
     });
 

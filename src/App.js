@@ -7,8 +7,6 @@ import RumorsLies from "./pages/rumorslies/RumorsLies";
 import Contact from "./pages/contact/Contact";
 import Shop from "./pages/shop/Shop";
 import Subscribe from "./pages/subscribe/Subscribe";
-import AdminLogin from "./pages/adminlogin/AdminLogin";
-import ReelInfo from "./pages/reelinfo/ReelInfo";
 import AdminDashboard from "./pages/admindashboard/AdminDashboard";
 import Exhibitions from "./pages/exhibitions/Exhibitions";
 import ReelLogin from "./pages/reellogin/ReelLogin";
@@ -28,8 +26,6 @@ function App() {
           <Route path="/contact" element={<Contact />} />
           <Route path="/shop" element={<Shop />} />
           <Route path="/subscribe" element={<Subscribe />} />
-          <Route path="/adminlogin" element={<AdminLogin />} />
-          <Route path="/reelinfo" element={<ReelInfo />} />
           <Route path="/admin" element={<AdminDashboard />} />
           <Route path="/reellogin" element={<ReelLogin />} />
           <Route path="/videoinfo" element={<VideoInfo />} />
