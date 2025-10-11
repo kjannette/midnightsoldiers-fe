@@ -10,6 +10,8 @@ import AdminDashboard from "./pages/admindashboard/AdminDashboard";
 import Exhibitions from "./pages/exhibitions/Exhibitions";
 import ReelLogin from "./pages/reellogin/ReelLogin";
 import VideoInfo from "./pages/videoinfo/VideoInfo";
+import ToS from "./pages/tos/ToS";
+import Privacy from "./pages/privacy/Privacy";
 import "./App.css";
 
 function App() {
@@ -24,6 +26,8 @@ function App() {
           <Route path="/rumors-lies" element={<RumorsLies />} />
           <Route path="/contact" element={<Contact />} />
           <Route path="/subscribe" element={<Subscribe />} />
+          <Route path="/tos" element={<ToS />} />
+          <Route path="/privacy" element={<Privacy />} />
           <Route path="/admin" element={<AdminDashboard />} />
           <Route path="/reellogin" element={<ReelLogin />} />
           <Route path="/videoinfo" element={<VideoInfo />} />
