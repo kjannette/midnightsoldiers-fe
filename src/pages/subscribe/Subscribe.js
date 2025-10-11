@@ -221,9 +221,9 @@ const Subscribe = () => {
                 margin: "20px 0",
                 padding: "10px",
                 backgroundColor: "#d4edda",
-                color: "#155724",
+                color: "#00FF00",
                 border: "1px solid #c3e6cb",
-                borderRadius: "4px",
+                borderRadius: "0",
               }}
             >
               ✅ Thank you for subscribing! We'll be in touch soon.
@@ -237,9 +237,9 @@ const Subscribe = () => {
                 margin: "20px 0",
                 padding: "10px",
                 backgroundColor: "#f8d7da",
-                color: "#721c24",
+                color: "#00FF00",
                 border: "1px solid #f5c6cb",
-                borderRadius: "4px",
+                borderRadius: "0",
               }}
             >
               ❌ {submitError}
@@ -287,9 +287,9 @@ const Subscribe = () => {
                   margin: "20px 0",
                   padding: "10px",
                   backgroundColor: "#d4edda",
-                  color: "#155724",
+                  color: "#00FF00",
                   border: "1px solid #c3e6cb",
-                  borderRadius: "4px",
+                  borderRadius: "0",
                 }}
               >
                 ✅ Thank you for subscribing to our newsletter!
@@ -303,9 +303,9 @@ const Subscribe = () => {
                   margin: "20px 0",
                   padding: "10px",
                   backgroundColor: "#f8d7da",
-                  color: "#721c24",
+                  color: "#00FF00",
                   border: "1px solid #f5c6cb",
-                  borderRadius: "4px",
+                  borderRadius: "0",
                 }}
               >
                 ❌ {newsletterError}
