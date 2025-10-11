@@ -6,7 +6,7 @@ const apiUrl =
 export async function postReel(reelData) {
   const data = JSON.stringify(reelData);
   try {
-    const response = await fetch(`${apiUrl}/v1/store-edited-completions`, {
+    const response = await fetch(`${apiUrl}/v1/accept-reel-data/:reelId`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       json: true,

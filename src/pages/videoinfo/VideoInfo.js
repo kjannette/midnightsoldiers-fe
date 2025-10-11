@@ -129,11 +129,21 @@ const VideoInfo = () => {
     if (fieldName === "videoFile") {
       const allowedTypes = [
         "video/mp4",
-        "video/mov",
-        "video/avi",
+        "video/quicktime", // MOV files use video/quicktime MIME type
+        "video/x-msvideo", // AVI files
         "video/webm",
       ];
-      if (!allowedTypes.includes(file.type)) {
+      const allowedExtensions = [".mp4", ".mov", ".avi", ".webm"];
+      
+      // Check both MIME type and file extension (some browsers report different MIME types)
+      const fileExtension = file.name
+        .toLowerCase()
+        .substring(file.name.lastIndexOf("."));
+      const isValidType =
+        allowedTypes.includes(file.type) ||
+        allowedExtensions.includes(fileExtension);
+
+      if (!isValidType) {
         setErrors((prev) => ({
           ...prev,
           [fieldName]: "Please select a valid video file (MP4, MOV, AVI, WEBM)",
@@ -228,14 +238,14 @@ const VideoInfo = () => {
         setSubmitProgress("Updating video information...");
         const videoRef = doc(db, "reels", formData.id); // Using same collection for now
         await updateDoc(videoRef, videoData);
-        console.log("Video updated successfully");
       } else {
         // Create new video
         setSubmitProgress("Saving video information...");
         const videoId = uuidv4();
-        const videoRef = doc(db, "reels", videoId); // Using same collection for now
-        await setDoc(videoRef, { ...videoData, id: videoId });
-        console.log("Video created successfully");
+        const videoRef = doc(db, "reels", videoId); 
+        //*****************************************************STORE TO FIREBASE
+        const fireResponse = await setDoc(videoRef, { ...videoData, id: videoId });
+        console.log('fireResponse', fireResponse);
       }
 
       // Send to backend API
@@ -249,28 +259,22 @@ const VideoInfo = () => {
 
       const response = await postReel(apiData);
       console.log("Backend response:", response);
-
-      setSubmitSuccess(true);
+      //setSubmitSuccess(true);
       setSubmitProgress("Video submitted successfully!");
-
-      // Reset form after successful submission
-      setTimeout(() => {
-        setFormData({
-          videoName: "",
-          videoDescription: "",
-          videoFile: null,
-          videoUrl: "",
-          id: null,
-        });
-        setVideoSize(null);
-        setSubmitSuccess(false);
-        setSubmitProgress(null);
-      }, 3000);
+      setSubmitProgress(null);
     } catch (error) {
       console.error("Error submitting video:", error);
       setErrors({ submit: "Failed to submit video. Please try again." });
       setSubmitProgress(null);
     } finally {
+      setFormData({
+        videoName: "",
+        videoDescription: "",
+        videoFile: null,
+        videoUrl: "",
+        id: null,
+      });
+      setVideoSize(null);
       setIsSubmitting(false);
     }
   };
