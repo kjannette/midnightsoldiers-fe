@@ -27,7 +27,7 @@ const News = () => {
 
   // Handle loading state and minimum loading time
   useEffect(() => {
-    const minimumLoadingTime = 4000; // 4 seconds
+    const minimumLoadingTime = 1500; // 1.5 seconds
     const startTime = Date.now();
 
     const handleLoadingComplete = () => {
