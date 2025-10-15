@@ -1,9 +1,13 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { useAuth } from "../context/AuthContext";
+import { signOutAdmin } from "../firebase/services";
 import "./Navigation.css";
 
 const Navigation = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const { isAuthenticated, logout } = useAuth();
+  const navigate = useNavigate();
 
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
@@ -11,6 +15,17 @@ const Navigation = () => {
 
   const closeMenu = () => {
     setIsMenuOpen(false);
+  };
+
+  const handleLogout = async () => {
+    try {
+      await signOutAdmin();
+      logout();
+      navigate("/");
+      closeMenu();
+    } catch (error) {
+      console.error("Error logging out:", error);
+    }
   };
 
   return (
@@ -34,6 +49,11 @@ const Navigation = () => {
           <Link to="/subscribe" className="nav-link">
             Subscribe
           </Link>
+          {isAuthenticated && (
+            <button onClick={handleLogout} className="nav-link logout-button">
+              Logout
+            </button>
+          )}
         </div>
       </nav>
 
@@ -73,6 +93,11 @@ const Navigation = () => {
             >
               Subscribe
             </Link>
+            {isAuthenticated && (
+              <button onClick={handleLogout} className="mobile-nav-link logout-button">
+                Logout
+              </button>
+            )}
           </div>
         </div>
       </div>

@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { signInAdmin } from "../../firebase/services";
+import { useAuth } from "../../context/AuthContext";
 import "./ReelLogin.css";
 
 const ReelLogin = () => {
@@ -11,6 +12,7 @@ const ReelLogin = () => {
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
+  const { login } = useAuth();
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -32,9 +34,8 @@ const ReelLogin = () => {
       const user = await signInAdmin(credentials.username, credentials.password);
       console.log("Login successful:", user);
       
-      // Store authentication state
-      sessionStorage.setItem("isAuthenticated", "true");
-      sessionStorage.setItem("userEmail", user.email);
+      // Update authentication state via AuthContext
+      login(user);
       
       // Successful login - redirect to videoinfo page
       navigate("/videoinfo");
