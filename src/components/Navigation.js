@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import { signOutAdmin } from "../firebase/services";
 import "./Navigation.css";
@@ -8,6 +8,10 @@ const Navigation = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const { isAuthenticated, logout } = useAuth();
   const navigate = useNavigate();
+  const location = useLocation();
+  
+  // Only show logout button on /videoinfo page
+  const showLogoutButton = isAuthenticated && location.pathname === "/videoinfo";
 
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
@@ -49,7 +53,7 @@ const Navigation = () => {
           <Link to="/subscribe" className="nav-link">
             Subscribe
           </Link>
-          {isAuthenticated && (
+          {showLogoutButton && (
             <button onClick={handleLogout} className="nav-link logout-button">
               Logout
             </button>
@@ -93,7 +97,7 @@ const Navigation = () => {
             >
               Subscribe
             </Link>
-            {isAuthenticated && (
+            {showLogoutButton && (
               <button onClick={handleLogout} className="mobile-nav-link logout-button">
                 Logout
               </button>

@@ -8,8 +8,6 @@ import News from "./pages/news/News";
 import RumorsLies from "./pages/rumorslies/RumorsLies";
 import Contact from "./pages/contact/Contact";
 import Subscribe from "./pages/subscribe/Subscribe";
-import AdminDashboard from "./pages/admindashboard/AdminDashboard";
-import Exhibitions from "./pages/exhibitions/Exhibitions";
 import ReelLogin from "./pages/reellogin/ReelLogin";
 import VideoInfo from "./pages/videoinfo/VideoInfo";
 import ToS from "./pages/tos/ToS";
@@ -24,16 +22,13 @@ function App() {
           <Navigation />
           <Routes>
             <Route path="/" element={<Home />} />
-            <Route path="/exhibitions" element={<Exhibitions />} />
             <Route path="/news" element={<News />} />
             <Route path="/rumors-lies" element={<RumorsLies />} />
             <Route path="/contact" element={<Contact />} />
             <Route path="/subscribe" element={<Subscribe />} />
             <Route path="/tos" element={<ToS />} />
             <Route path="/privacy" element={<Privacy />} />
-            <Route path="/admin" element={<AdminDashboard />} />
             <Route path="/reellogin" element={<ReelLogin />} />
-            
             {/* Protected Routes */}
             <Route element={<ProtectedRoute />}>
               <Route path="/videoinfo" element={<VideoInfo />} />
